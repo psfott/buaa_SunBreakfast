@@ -7,5 +7,6 @@ import Router from "./router/index.js";
 const app = createApp(App)
 
 app.use(ElementPlus)
+
 app.use(Router)
 app.mount('#app')
