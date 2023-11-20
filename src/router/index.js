@@ -1,14 +1,18 @@
 // 路由文件
 import { createRouter, createWebHistory } from "vue-router";
 
-import Home from '../views/Home.vue'
-
 const routes = [
     {
-        path: '/',
-        name: 'Home',
-        component: Home
+        path: '/home',
+        name: 'home',
+        component: () => import(/* webpackChunkName: "login" */ '../views/Home.vue')
+    },
+    {
+        path: '/login',
+        name: 'login',
+        component: () => import(/* webpackChunkName: "login" */ '../views/Login.vue')
     }
+
 ]
 
 const router = createRouter({
