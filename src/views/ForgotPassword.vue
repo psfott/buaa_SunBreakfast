@@ -1,81 +1,63 @@
 <template>
-  <div class="login-body">
-    <div class="login-container">
+  <div class="reset-password">
+    <div class="password-container">
       <div class="head">
         <img class="logo" src="/logo.png" alt=""/>
         <div class="name">
-          <div class="title">北航阳光早餐系统</div>
+          <div class="title">重置密码</div>
         </div>
       </div>
-      <el-form label-position="top" :rules="state.rules" :model="state.ruleForm" ref="loginForm" class="login-form">
-        <el-form-item label="账号" prop="username">
-          <el-input type="text" v-model.trim="state.ruleForm.username" autocomplete="off"></el-input>
+      <el-form label-position="top" :ref="resetPasswordForm" :model="resetPasswordForm" class="password-form">
+        <el-form-item label="用户名" prop="username">
+          <el-input v-model="resetPasswordForm.username" placeholder="请输入用户名"></el-input>
         </el-form-item>
-        <el-form-item label="密码" prop="password">
-          <el-input type="password" v-model.trim="state.ruleForm.password" autocomplete="off"></el-input>
+        <el-form-item label="手机号" prop="phone">
+          <el-input v-model="resetPasswordForm.phone" placeholder="请输入手机号"></el-input>
+        </el-form-item>
+        <el-form-item label="新密码" prop="newPassword">
+          <el-input type="password" v-model="resetPasswordForm.newPassword" placeholder="请输入新密码"></el-input>
+        </el-form-item>
+        <el-form-item label="确认密码" prop="confirmPassword">
+          <el-input type="password" v-model="resetPasswordForm.confirmPassword" placeholder="请确认密码"></el-input>
         </el-form-item>
         <el-form-item>
-          <div style="color: #333">登录表示您已同意<a>《服务条款》</a></div>
-          <el-button style="width: 100%" type="primary" @click="submitForm">立即登录</el-button>
-          <el-checkbox v-model="state.checked" @change="!state.checked">下次自动登录</el-checkbox>
+          <el-button type="primary" @click="resetPassword">重置密码</el-button>
+          <router-link to="/login">
+            <el-button>返回登录</el-button>
+          </router-link>
         </el-form-item>
-        <el-row style="text-align: center;margin-top:-10px">
-          <router-link to="/forgot-password">
-            <el-link type="primary">忘记密码</el-link>
-          </router-link>
-        </el-row>
-        <el-row style="text-align: center;margin-top:10px">
-          <router-link to="/register">
-            <el-link type="primary">用户注册</el-link>
-          </router-link>
-        </el-row>
       </el-form>
     </div>
   </div>
 </template>
 
-<script setup>
-import { reactive, ref } from 'vue'
-import axios from "axios";
-const loginForm = ref(null)
-const state = reactive({
-  ruleForm: {
-    username: '',
-    password: ''
+<script>
+export default {
+  data() {
+    return {
+      resetPasswordForm: {
+        username: '',
+        phone: '',
+        newPassword: '',
+        confirmPassword: ''
+      }
+    };
   },
-  checked: true,
-  rules: {
-    username: [
-      { required: 'true', message: '账户不能为空', trigger: 'blur' }
-    ],
-    password: [
-      { required: 'true', message: '密码不能为空', trigger: 'blur' }
-    ]
-  }
-})
-const submitForm = async () => {
-  loginForm.value.validate((valid) => {
-    if (valid) {
-      axios.post('/adminUser/login', {
-        userName: state.ruleForm.username || '',
-        passwordMd5: md5(state.ruleForm.password)
-      }).then(res => {
-        //localSet('token', res)
-        window.location.href = '/'
-      })
-    } else {
-      console.log('error submit!!')
-      return false;
+  methods: {
+    resetPassword() {
+      // 在这里可以添加表单验证逻辑
+
+      // 模拟重置密码成功，你可以在这里调用实际的重置密码接口
+      console.log('重置密码成功', this.resetPasswordForm);
+
+      // 重置密码成功后，你可能会进行页面跳转或其他操作
     }
-  })
-}
-const resetForm = () => {
-  loginForm.value.resetFields();
-}
+  }
+};
 </script>
 
 <style scoped>
-.login-body {
+.reset-password {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -89,7 +71,7 @@ const resetForm = () => {
   background-position: center;
   background-size: 100%;
 }
-.login-container {
+.password-container {
   width: 420px;
   height: 500px;
   background-color: #fff;
@@ -112,11 +94,11 @@ const resetForm = () => {
   color: #1BAEAE;
   font-weight: bold;
 }
-.head .tips {
-  font-size: 12px;
-  color: #999;
+.title {
+  text-align: center;
+  margin-bottom: 20px;
 }
-.login-form {
+.password-form {
   width: 70%;
   margin: 0 auto;
 }
