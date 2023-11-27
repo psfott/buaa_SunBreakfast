@@ -1,16 +1,30 @@
 <template>
   <div class="home">
     <h1 class="title">北航阳光早餐系统</h1>
-    <el-button @click="showMessage" type="success" size="large" round>我是学生</el-button>
-    <el-button @click="showMessage" type="primary" size="large" round>我是商家</el-button>
-    <el-button @click="showMessage" type="danger" size="large" round>我是骑手</el-button>
+    <router-link to="/login">
+      <el-button @click="showMessage" type="success" size="large" round :icon="User">我是学生</el-button>
+      <el-button @click="showMessage" type="primary" size="large" round :icon="Avatar">我是商家</el-button>
+      <el-button @click="showMessage" type="danger" size="large" round :icon="UserFilled">我是骑手</el-button>
+    </router-link>
   </div>
 </template>
 
 <script>
 import {ElMessage} from "element-plus";
+import {Avatar, User, UserFilled} from "@element-plus/icons-vue";
 
 export default {
+  computed: {
+    UserFilled() {
+      return UserFilled
+    },
+    Avatar() {
+      return Avatar
+    },
+    User() {
+      return User
+    }
+  },
   data(){
     return{}
   },
@@ -35,8 +49,9 @@ export default {
 
 .title {
   font-size: 50px; /* Adjust the font size as needed */
+  margin-top: 150px;
   margin-bottom: 150px; /* Add some space below the title */
-  color: #83c0fd;
+  color: #b1d7fd;
 }
 
 /* Style adjustments for the buttons */
