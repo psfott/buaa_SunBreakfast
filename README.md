@@ -1,29 +1,50 @@
-# demo
+# 北航阳光早餐系统
 
-This template should help get you started developing with Vue 3 in Vite.
+## 功能描述：
 
-## Recommended IDE Setup
+- 对于消费者，涵盖的功能如下：
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+  > - 用户注册
+  > - 用户登录与退出登录
+  > - 用户个人信息的设置和展示
+  > - 订单状态查询、历史订单查询
+  > - 商家查询与筛选，早餐餐品查询与筛选
+  > - 餐品下单
+  > - 餐品保存到购物车
+  > - 完成订单后对订单进行评分，对送餐员进行打赏
+  > - 餐品收藏
 
-## Customize configuration
+- 对于送餐者，涵盖的功能如下：
 
-See [Vite Configuration Reference](https://vitejs.dev/config/).
+  > - 送餐员注册
+  > - 送餐员登录与退出登录
+  > - 送餐员个人信息的设置和展示
+  > - 送餐员接单
+  > - 当前订单状态查询、历史订单查询
+  > - 送餐员确认收益
 
-## Project Setup
+- 对于商家，涵盖的功能如下：
 
-```sh
-npm install
-```
+  > - 商家注册
+  > - 商家登录与退出登录
+  > - 商家个人信息的设置和展示
+  > - 商家上传早餐餐品，删除早餐餐品
+  > - 商家组合餐品设置套餐
+  > - 商家接单
+  > - 当前订单状态查询、历史订单查询
+  > - 商家确认收益
 
-### Compile and Hot-Reload for Development
+## 联系名称：
 
-```sh
-npm run dev
-```
-
-### Compile and Minify for Production
-
-```sh
-npm run build
-```
+1. 学生表（id，姓名，密码，寝室位置，电话）
+2. 商家表（id，姓名，种类，密码，电话，菜品均价）
+3. 送餐员表（id，姓名，种类，密码，电话）
+4. 餐品表（id，名称，价格，评分，菜品标签）
+5. 订单表（订单id，学生id，骑手id，商家id，订单种类，下单时间，接单时间，派送时间，到餐时间，寝室位置，餐品id，餐品数量，交易记录）
+6. 学生收藏表（商家id，餐品id）
+7. 学生购物车表（商家id，餐品id，餐品数量）
+8. 订单分配表（订单id，骑手id，寝室位置）
+9. 评价表 （id，商家id，餐品id，评价内容，评分，评论）
+10. 交易记录表（订单id、支付方式、支付状态、支付金额）
+11. 投诉表（投诉id、投诉内容、投诉时间）
+12. 菜品标签表（标签内容，引用次数）
