@@ -20,6 +20,16 @@
           <el-button style="width: 100%" type="primary" @click="submitForm">立即登录</el-button>
           <el-checkbox v-model="state.checked" @change="!state.checked">下次自动登录</el-checkbox>
         </el-form-item>
+        <el-row style="text-align: center;margin-top:-10px">
+          <router-link to="/forgot-password">
+            <el-link type="primary">忘记密码</el-link>
+          </router-link>
+        </el-row>
+        <el-row style="text-align: center;margin-top:10px">
+          <router-link to="/register">
+            <el-link type="primary">用户注册</el-link>
+          </router-link>
+        </el-row>
       </el-form>
     </div>
   </div>
