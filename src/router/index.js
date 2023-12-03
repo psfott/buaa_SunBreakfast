@@ -31,7 +31,8 @@ const routes = [
     {
         path: '/merchant',
         name: 'Merchant',
-        component: Merchant
+        component: Merchant,
+        meta: { requiresAuth: true }
     }
 ]
 

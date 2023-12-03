@@ -17,3 +17,15 @@ for (let iconName in ElementPlusIconsVue) {
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
     app.component(key, component)
 }
+
+router.beforeEach((to, from, next) => {
+    const isAuthenticated = false;
+
+    if (to.meta.requiresAuth && !isAuthenticated) {
+        // 如果用户未登录且访问需要登录的页面，则重定向到登录页面
+        next('/login');
+    } else {
+        // 允许访问
+        next();
+    }
+});
