@@ -17,7 +17,7 @@
         <el-form-item>
           <div style="color: #333">登录表示您已同意<a>《服务条款》</a></div>
           <el-button style="width: 100%" type="primary" @click="submitForm">立即登录</el-button>
-          <el-checkbox v-model="state.checked" @change="!state.checked">下次自动登录</el-checkbox>
+            <el-checkbox v-model="state.checked" @change="!state.checked">下次自动登录</el-checkbox>
         </el-form-item>
         <el-row style="text-align: center;margin-top:-10px">
           <router-link to="/forgot-password">
