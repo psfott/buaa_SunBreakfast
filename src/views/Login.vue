@@ -34,44 +34,53 @@
   </div>
 </template>
 
-<script setup>
-import { reactive, ref } from 'vue'
-import axios from "axios";
-const loginForm = ref(null)
-const state = reactive({
-  ruleForm: {
-    username: '',
-    password: ''
+<script>
+export default {
+  data() {
+    return {
+      state: {
+        ruleForm: {
+          username: '',
+          password: ''
+        },
+        rules: {
+          // 表单验证规则
+          username: [
+            { required: true, message: '请输入账号', trigger: 'blur' }
+          ],
+          password: [
+            { required: true, message: '请输入密码', trigger: 'blur' }
+          ]
+        },
+        checked: false
+      }
+    };
   },
-  checked: true,
-  rules: {
-    username: [
-      { required: 'true', message: '账户不能为空', trigger: 'blur' }
-    ],
-    password: [
-      { required: 'true', message: '密码不能为空', trigger: 'blur' }
-    ]
-  }
-})
-const submitForm = async () => {
-  loginForm.value.validate((valid) => {
-    if (valid) {
-      axios.post('/adminUser/login', {
-        userName: state.ruleForm.username || '',
-        passwordMd5: md5(state.ruleForm.password)
-      }).then(res => {
-        //localSet('token', res)
-        window.location.href = '/'
-      })
-    } else {
-      console.log('error submit!!')
-      return false;
+  methods: {
+    async submitForm() {
+      try {
+        // 发送登录请求到后端
+        const response = await this.$axios.post('/api/login', {
+          username: this.state.ruleForm.username,
+          password: this.state.ruleForm.password
+        });
+
+        // 假设后端返回的数据中包含一个表示登录成功的字段，例如 success
+        if (response.data.success) {
+          this.$root.isAuthenticated = true; // 在 Vue 实例中设置变量
+          this.$router.push('/merchant');
+        } else {
+          // 登录失败，处理错误信息，例如显示错误提示
+          this.$message.error('登录失败，用户名或密码错误');
+        }
+      } catch (error) {
+        // 发生错误，可以进行相应的处理，例如显示错误提示
+        console.error('登录请求失败', error);
+        this.$message.error('登录请求失败，请重试');
+      }
     }
-  })
-}
-const resetForm = () => {
-  loginForm.value.resetFields();
-}
+  }
+};
 </script>
 
 <style scoped>
