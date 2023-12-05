@@ -565,3 +565,44 @@ def change_food(request):
         return JsonResponse({"error": 0, "msg": "商家修改菜品信息成功"})
     else:
         return JsonResponse({"error": 2001, "msg": "请求方式错误"})
+
+
+# 查询商家历史订单
+@csrf_exempt
+def query_merchant_history(request):
+    if request.method == "POST":
+        merchant_id = request.POST.get("merchant_id")
+        results = list(Order.objects.filter(merchant_id=merchant_id).order_by('-create_time').values())
+        return JsonResponse({'error': 0,
+                             'msg': '查看商家历史订单成功!',
+                             'data': {
+                                 "results": results
+                             }
+                             })
+    else:
+        return JsonResponse({"error": 2001, "msg": "请求方式错误"})
+
+
+# Food
+
+# 查询菜品历史评价
+@csrf_exempt
+def query_food_comments(request):
+    if request.method == "POST":
+        food_id = request.POST.get("food_id")
+        order_foods = order_food.objects.filter(food_id=food_id).order_by('-create_time')
+
+        comments = []
+        for order_food_item in order_foods:
+            comment = Comment.objects.filter(order_id=order_food_item.order_id).values()
+            if comment.exists() and comment not in comments:
+                comments.append(comment)
+
+        return JsonResponse({'error': 0,
+                             'msg': '查看菜品历史评价成功!',
+                             'data': {
+                                 "results": comments
+                             }
+                             })
+    else:
+        return JsonResponse({"error": 2001, "msg": "请求方式错误"})
