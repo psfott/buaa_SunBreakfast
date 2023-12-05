@@ -239,7 +239,7 @@ def query_student_cart(request):
 
 # 添加食品到购物车
 @csrf_exempt
-def add_cart_item(request):
+def new_cart_item(request):
     if request.method == "POST":
         student_id = request.POST.get("student_id")
         food_id = request.POST.get("food_id")  # 默认为1
@@ -459,9 +459,7 @@ def merchant_register(request):
         new_merchant.user_name = user_name
         new_merchant.password = password1
         new_merchant.telephone = telephone
-
         new_merchant.save()
-
         token = create_token(user_name)
         return JsonResponse({'error': 0,
                              'msg': '注册成功!',
@@ -539,13 +537,31 @@ def add_food(request):
         merchant_id = request.POST.get("merchant_id")
         name = request.POST.get("name")
         price = request.POST.get("price")
-        type = request.POST.get("type")
+        type_ = request.POST.get("type")
         new_food = Food()
         new_food.merchant_id = merchant_id
         new_food.name = name
         new_food.price = price
-        new_food.type = type
+        new_food.type = type_
         new_food.save()
         return JsonResponse({"error": 0, "msg": "商家添加菜品成功"})
+    else:
+        return JsonResponse({"error": 2001, "msg": "请求方式错误"})
+
+
+# 商家修改菜品信息
+@csrf_exempt
+def change_food(request):
+    if request.method == "POST":
+        food_id = request.POST.get("food_id")
+        food = Food.objects.get(id=food_id)
+        name = request.POST.get("name")
+        price = request.POST.get("price")
+        type_ = request.POST.get("type")
+        food.name = name
+        food.price = price
+        food.type = type_
+        food.save()
+        return JsonResponse({"error": 0, "msg": "商家修改菜品信息成功"})
     else:
         return JsonResponse({"error": 2001, "msg": "请求方式错误"})
