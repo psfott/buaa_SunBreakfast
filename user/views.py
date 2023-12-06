@@ -290,6 +290,43 @@ def delete_cart_item(request):
         return JsonResponse({"error": 2001, "msg": "请求方式错误"})
 
 
+# 查询学生个人信息
+@csrf_exempt
+def query_student_identity(request):
+    if request.method == "POST":
+        student_id = request.POST.get("student_id")
+        student = Student.objects.get(id=student_id)
+        return JsonResponse({'error': 0,
+                             'msg': '查看个人信息成功!',
+                             'data': {
+                                 "user_name": student.user_name,
+                                 "building_id": student.building_id,
+                                 "room_id": student.room_id,
+                                 "telephone": student.telephone,
+                                 "image": student.image
+                             }
+                             })
+    else:
+        return JsonResponse({"error": 2001, "msg": "请求方式错误"})
+
+
+# 修改学生个人信息
+@csrf_exempt
+def change_student_identity(request):
+    if request.method == "POST":
+        student_id = request.POST.get("student_id")
+        student = Student.objects.get(id=student_id)
+        student.user_name = request.POST.get("user_name")
+        student.building_id = request.POST.get("building_id")
+        student.room_id = request.POST.get("room_id")
+        student.telephone = request.POST.get("telephone")
+        student.image = request.POST.get("image")
+        student.save()
+        return JsonResponse({'error': 0, 'msg': '修改个人信息成功!'})
+    else:
+        return JsonResponse({"error": 2001, "msg": "请求方式错误"})
+
+
 # Rider
 class RiderRegisterForm(forms.Form):
     user_name = forms.CharField(label="用户名", max_length=128, widget=forms.TextInput())
