@@ -43,8 +43,9 @@ class Food(models.Model):
     name = models.CharField(max_length=128, unique=True)
     score = models.FloatField(default="0")
     price = models.FloatField(default="0")
-    type = models.IntegerField(default=0)
+    type_id = models.IntegerField(default=0)
     image = models.ImageField(upload_to='merchant_images/', null=True, blank=True)
+    status = models.BooleanField(default=True)
 
     class Meta:
         db_table = "foods"

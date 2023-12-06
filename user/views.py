@@ -537,12 +537,13 @@ def add_food(request):
         merchant_id = request.POST.get("merchant_id")
         name = request.POST.get("name")
         price = request.POST.get("price")
-        type_ = request.POST.get("type")
+        type_id = request.POST.get("type_id")
         new_food = Food()
         new_food.merchant_id = merchant_id
         new_food.name = name
         new_food.price = price
-        new_food.type = type_
+        new_food.type_id = type_id
+        new_food.status = True
         new_food.save()
         return JsonResponse({"error": 0, "msg": "商家添加菜品成功"})
     else:
@@ -557,10 +558,12 @@ def change_food(request):
         food = Food.objects.get(id=food_id)
         name = request.POST.get("name")
         price = request.POST.get("price")
-        type_ = request.POST.get("type")
+        type_id = request.POST.get("type_id")
+        status = request.POST.get("status")
         food.name = name
         food.price = price
-        food.type = type_
+        food.type_id = type_id
+        food.status = status
         food.save()
         return JsonResponse({"error": 0, "msg": "商家修改菜品信息成功"})
     else:
