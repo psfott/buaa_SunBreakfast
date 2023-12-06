@@ -550,6 +550,31 @@ def add_food(request):
         return JsonResponse({"error": 2001, "msg": "请求方式错误"})
 
 
+# 商家添加标签
+@csrf_exempt
+def add_type(request):
+    if request.method == "POST":
+        name = request.POST.get("name")
+        new_type = Type()
+        new_type.name = name
+        new_type.save()
+        return JsonResponse({"error": 0, "msg": "商家添加标签成功"})
+    else:
+        return JsonResponse({"error": 2001, "msg": "请求方式错误"})
+
+
+# 商家删除标签
+@csrf_exempt
+def delete_type(request):
+    if request.method == "POST":
+        type_id = request.POST.get("type_id")
+        type_ = Type.objects.filter(type_id=type_id)
+        type_.delete()
+        return JsonResponse({'error': 0, 'msg': '删除标签成功!'})
+    else:
+        return JsonResponse({"error": 2001, "msg": "请求方式错误"})
+
+
 # 商家修改菜品信息
 @csrf_exempt
 def change_food(request):
