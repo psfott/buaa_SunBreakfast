@@ -6,10 +6,15 @@ import Login from '../views/Login.vue'
 import Register from "../views/Register.vue";
 import ForgotPassword from "../views/ForgotPassword.vue";
 import Merchant from "@/views/Merchant/index.vue";
-import {localGet} from "@/utils";
+import User from "../views/User/index.vue"
+import Layout from "@/views/User/Pages/Layout.vue";
+import UserProfile from "../views/User/Pages/Profile.vue"
+import Main from "@/views/User/Pages/Main.vue";
+import Ongoing from "@/views/User/Pages/Ongoing.vue";
+import Finished from "@/views/User/Pages/Finished.vue";
+import Menu from "@/views/User/Pages/OrderMeal.vue"
 import AddProduct from "../views/Merchant/AddProduct.vue";
 import MerchantIntro from "@/views/Merchant/MerchantIntro.vue";
-import User from "../views/User/index.vue"
 import MerchantFood from "@/views/Merchant/Foods.vue";
 import MerchantFoodCategory from "@/views/Merchant/FoodCategory.vue";
 import MerchantAccount from "@/views/Merchant/MerchantAccount.vue";
@@ -38,6 +43,37 @@ const routes = [
         component: Register
     },
     {
+        path: '/merchant',
+        name: 'Merchant',
+        component: Merchant
+    },
+    {
+        path: '/user',
+        component: Layout, //使用布局组件
+        children: [
+            {
+                path:'',
+                redirect:'/user/main'
+            },
+            {
+                path:'profile',
+                component: UserProfile
+            },
+            {
+                path:'main',
+                component: Main
+            },
+            {
+                path: 'ongoing',
+                component: Ongoing
+            },
+            {
+                path: 'finished',
+                component: Finished
+            }
+        ]
+    },
+    {
 
         path: '/merchant',
         name: 'merchant',
@@ -55,9 +91,10 @@ const routes = [
         ]
     },
     {
-        path: '/user',
-        name: 'User',
-        component: User
+        path: '/menu/:id',
+        name: 'menu',
+        component: Menu,
+        props: true,
     }
 ]
 

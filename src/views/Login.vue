@@ -41,12 +41,12 @@ import { reactive, ref } from 'vue'
 // const loginForm = ref(null)
 // const state = reactive({
 //   ruleForm: {
-//     userName: '',
+//     user_name: '',
 //     password: ''
 //   },
 //   rules: {
 //     // 表单验证规则
-//     userName: [
+//     user_name: [
 //       { required: true, message: '请输入账号', trigger: 'blur' }
 //     ],
 //     password: [
@@ -59,30 +59,16 @@ import { reactive, ref } from 'vue'
 // const submitForm = async () => {
 //   loginForm.value.validate((valid) => {
 //         if (valid) {
-//           try {
 //         // 发送登录请求到后端
-//         const response = axios.post('/api/Merchant/login', {
-//           userName: this.state.ruleForm.userName,
-//           password: this.state.ruleForm.password
-//         });
-//         // 假设后端返回的数据中包含一个表示登录成功的字段，例如 success
-//         if (response.data.success) {
-//           localSet('token', res)
-//           this.$router.push('/merchant');
-//         } else {
-//           // 登录失败，处理错误信息，例如显示错误提示
-//           this.$message.error('登录失败，用户名或密码错误');
-//         }
-//       } catch (error) {
-//         // 发生错误，可以进行相应的处理，例如显示错误提示
-//         console.error('登录请求失败', error);
-//         this.$message.error('登录请求失败，请重试');
-//       }
+//           axios.post('/api/Merchant/login', ruleForm).then(res => {
+//             localSet('token', res)
+//             window.location.href = '/'
+//           })
 //         } else {
 //           console.log('error submit!!')
 //           return false;
 //         }
-//       })
+//   })
 // }
 export default {
   data() {
@@ -106,36 +92,19 @@ export default {
     };
   },
   methods: {
+
     async submitForm() {
-      try {
-        // 发送登录请求到后端
-        println(this.state.ruleForm.user_name);
-        print(this.state.ruleForm.password)
-        const response = await axios.post('/api/Merchant/login', {
-          user_name: this.state.ruleForm.user_name,
-          password: this.state.ruleForm.password
-        });
-        // 假设后端返回的数据中包含一个表示登录成功的字段，例如 success
-        // if (response.data.success) {
-        //   localSet('token', res)
-        //   this.$router.push('/merchant');
-        // } else {
-        //   // 登录失败，处理错误信息，例如显示错误提示
-        //   this.$message.error('登录失败，用户名或密码错误');
-        // }
-        if (response.data.error === 0) {
-          // Assuming token is returned in the response
-          // localSet('token', response.data.data.authorization);
-          this.$router.push('/merchant');
-        } else {
-          // Login failed, display error message
-          this.$message.error(response.data.msg);
-        }
-      } catch (error) {
-        // 发生错误，可以进行相应的处理，例如显示错误提示
-        console.error('登录请求失败', error);
-        this.$message.error('登录请求失败，请重试');
-      }
+        // console.log(this.state.ruleForm.user_name)
+        // console.log(this.state.ruleForm.password)
+        var formData=new FormData();
+        formData.append('user_name',this.state.ruleForm.user_name);
+        formData.append('password',this.state.ruleForm.password);
+        console.log(formData)
+        axios.post('/api/Merchant/login',formData).then(
+            res =>{
+                this.$router.push('/merchant');
+            }
+        ).catch((err) => {this.$message.error(err);})
     }
   }
 };
