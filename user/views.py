@@ -518,6 +518,38 @@ class MerchantLoginForm(forms.Form):
 
 
 @csrf_exempt
+# def merchant_login(request):
+#     if request.method == 'POST':
+#         login_form = MerchantLoginForm(request.POST)
+#         print("登录111")
+#         print(login_form)
+#         if login_form.is_valid():
+#             user_name = login_form.cleaned_data.get('user_name')
+#             password = login_form.cleaned_data.get('password')
+#             print(user_name)
+#             try:
+#                 merchant = Merchant.objects.get(user_name=user_name)
+#             except:
+#                 return JsonResponse({'error': 4001, 'msg': '商家不存在'})
+#             if merchant.password != password:
+#                 return JsonResponse({'error': 4002, 'msg': '密码错误'})
+#
+#             token = create_token(user_name)
+#             return JsonResponse({
+#                 'error': 0,
+#                 'msg': "登录成功!",
+#                 'data': {
+#                     'userid': merchant.id,
+#                     'username': merchant.user_name,
+#                     'authorization': token,
+#                     'telephone': merchant.telephone
+#                 }
+#             })
+#         else:
+#             return JsonResponse({'error': 3001, 'msg': '表单信息验证失败'})
+#
+#     else:
+#         return JsonResponse({'error': 2001, 'msg': '请求方式错误'})
 def merchant_login(request):
     if request.method == 'POST':
         login_form = MerchantLoginForm(request.POST)
@@ -529,8 +561,9 @@ def merchant_login(request):
             print(user_name)
             try:
                 merchant = Merchant.objects.get(user_name=user_name)
-            except:
+            except Merchant.DoesNotExist:
                 return JsonResponse({'error': 4001, 'msg': '商家不存在'})
+
             if merchant.password != password:
                 return JsonResponse({'error': 4002, 'msg': '密码错误'})
 
@@ -547,10 +580,8 @@ def merchant_login(request):
             })
         else:
             return JsonResponse({'error': 3001, 'msg': '表单信息验证失败'})
-
     else:
         return JsonResponse({'error': 2001, 'msg': '请求方式错误'})
-
 
 # 商家接单
 @csrf_exempt

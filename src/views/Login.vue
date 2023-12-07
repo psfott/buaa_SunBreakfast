@@ -9,7 +9,7 @@
       </div>
       <el-form label-position="top" :rules="state.rules" :model="state.ruleForm" ref="loginForm" class="login-form">
         <el-form-item label="账号" prop="username">
-          <el-input type="text" v-model.trim="state.ruleForm.username" autocomplete="off"></el-input>
+          <el-input type="text" v-model.trim="state.ruleForm.user_name" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="密码" prop="password">
           <el-input type="password" v-model.trim="state.ruleForm.password" autocomplete="off"></el-input>
@@ -89,12 +89,12 @@ export default {
     return {
       state: {
         ruleForm: {
-          userName: '',
+          user_name: '',
           password: ''
         },
         rules: {
           // 表单验证规则
-          userName: [
+          user_name: [
             { required: true, message: '请输入账号', trigger: 'blur' }
           ],
           password: [
@@ -109,17 +109,27 @@ export default {
     async submitForm() {
       try {
         // 发送登录请求到后端
+        println(this.state.ruleForm.user_name);
+        print(this.state.ruleForm.password)
         const response = await axios.post('/api/Merchant/login', {
-          userName: this.state.ruleForm.userName,
+          user_name: this.state.ruleForm.user_name,
           password: this.state.ruleForm.password
         });
         // 假设后端返回的数据中包含一个表示登录成功的字段，例如 success
-        if (response.data.success) {
-          localSet('token', res)
+        // if (response.data.success) {
+        //   localSet('token', res)
+        //   this.$router.push('/merchant');
+        // } else {
+        //   // 登录失败，处理错误信息，例如显示错误提示
+        //   this.$message.error('登录失败，用户名或密码错误');
+        // }
+        if (response.data.error === 0) {
+          // Assuming token is returned in the response
+          // localSet('token', response.data.data.authorization);
           this.$router.push('/merchant');
         } else {
-          // 登录失败，处理错误信息，例如显示错误提示
-          this.$message.error('登录失败，用户名或密码错误');
+          // Login failed, display error message
+          this.$message.error(response.data.msg);
         }
       } catch (error) {
         // 发生错误，可以进行相应的处理，例如显示错误提示
