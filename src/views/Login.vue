@@ -35,17 +35,18 @@
 </template>
 
 <script>
+import { localSet } from '@/utils'
 export default {
   data() {
     return {
       state: {
         ruleForm: {
-          username: '',
+          userName: '',
           password: ''
         },
         rules: {
           // 表单验证规则
-          username: [
+          userName: [
             { required: true, message: '请输入账号', trigger: 'blur' }
           ],
           password: [
@@ -61,13 +62,13 @@ export default {
       try {
         // 发送登录请求到后端
         const response = await this.$axios.post('/api/login', {
-          username: this.state.ruleForm.username,
+          userName: this.state.ruleForm.userName,
           password: this.state.ruleForm.password
         });
 
         // 假设后端返回的数据中包含一个表示登录成功的字段，例如 success
         if (response.data.success) {
-          this.$root.isAuthenticated = true; // 在 Vue 实例中设置变量
+          localSet('token', res)
           this.$router.push('/merchant');
         } else {
           // 登录失败，处理错误信息，例如显示错误提示

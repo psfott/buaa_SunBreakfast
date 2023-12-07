@@ -4,6 +4,7 @@ import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 import Router from "./router/index.js";
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
+import {localGet} from "@/utils";
 
 const app = createApp(App)
 
@@ -17,15 +18,3 @@ for (let iconName in ElementPlusIconsVue) {
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
     app.component(key, component)
 }
-
-router.beforeEach((to, from, next) => {
-    const isAuthenticated = false;
-
-    if (to.meta.requiresAuth && !isAuthenticated) {
-        // 如果用户未登录且访问需要登录的页面，则重定向到登录页面
-        next('/login');
-    } else {
-        // 允许访问
-        next();
-    }
-});

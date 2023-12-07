@@ -14,6 +14,9 @@
         <el-form-item label="手机号" prop="phone">
           <el-input v-model="registerForm.phone" placeholder="请输入手机号"></el-input>
         </el-form-item>
+        <el-form-item label="学号" prop="studentId">
+          <el-input type="studentId" v-model="registerForm.studentId" placeholder="请输入学号"></el-input>
+        </el-form-item>
         <el-form-item label="密码" prop="password">
           <el-input type="password" v-model="registerForm.password" placeholder="请输入密码"></el-input>
         </el-form-item>
@@ -32,25 +35,47 @@
 </template>
 
 <script>
+import {localSet} from "@/utils";
+import axios from "@/utils/axios";
+
 export default {
   data() {
     return {
       registerForm: {
-        username: '',
-        phone: '',
-        password: '',
-        confirmPassword: ''
+        userName: '',
+        password1: '',
+        password2: '',
+        telephone: '',
+        studentId:''
       }
     };
   },
   methods: {
-    submitForm() {
+    async submitForm() {
+      try {
+        // 发送登录请求到后端
+        const response = await this.$axios.post('/api/register', {
+          userName: this.state.ruleForm.userName,
+          password1: this.state.ruleForm.password1,
+          password2: this.state.ruleForm.password2,
+          telephone: this.state.ruleForm.telephone,
+          studentId: this.state.ruleForm.studentId,
+        });
+
+        // 假设后端返回的数据中包含一个表示登录成功的字段，例如 success
+        if (response.data.success) {
+          console.log('注册成功，请重新登录');
+          this.$router.push('/login');
+        } else {
+          // 登录失败，处理错误信息，例如显示错误提示
+          this.$message.error('注册失败，用户名或密码错误');
+        }
+      } catch (error) {
+        // 发生错误，可以进行相应的处理，例如显示错误提示
+        console.error('注册请求失败', error);
+        this.$message.error('注册请求失败，请重试');
+      }
       // 在这里可以添加表单验证逻辑
-
-      // 模拟注册成功，你可以在这里调用实际的注册接口
-      console.log('注册成功', this.registerForm);
-
-      // 注册成功后，你可能会进行页面跳转或其他操作
     }
   }
 };
