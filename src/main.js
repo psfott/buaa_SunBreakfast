@@ -5,7 +5,6 @@ import 'element-plus/dist/index.css'
 import Router from "./router/index.js";
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 import {localGet} from "@/utils";
-
 const app = createApp(App)
 
 app.use(ElementPlus)

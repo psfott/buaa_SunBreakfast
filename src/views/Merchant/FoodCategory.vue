@@ -82,7 +82,8 @@ import { onMounted, onUnmounted, reactive, ref, toRefs, watchEffect } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { Plus, Delete } from '@element-plus/icons-vue'
-import axios from '@/utils/axios'
+import axios from 'axios'
+// import axios from '@/utils/axios'
 import DialogAddCategory from '@/components/DialogAddCategory.vue'
 
 const addCate = ref(null)

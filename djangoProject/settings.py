@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 
+import os
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -37,10 +39,12 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'user',
     'order',
-    'manager'
+    'manager',
+    'corsheaders'
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -49,6 +53,14 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_METHOD = {
+    'POST',
+    'GET',
+    'OPTION'
+}
 
 ROOT_URLCONF = 'djangoProject.urls'
 
@@ -75,13 +87,13 @@ WSGI_APPLICATION = 'djangoProject.wsgi.application'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.mysql",
-        "NAME": "10walnuts",
-        "USER": "root",
-        "PASSWORD": "123456",
-        "HOST": "120.46.215.246",
-        "PORT": "3306",
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'db21373366',
+        'USER': '21373366',
+        'PASSWORD': 'Aa342522',
+        'HOST': '120.46.80.149',
+        'PORT': '3306',
     }
 }
 
@@ -123,3 +135,9 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# 设置媒体文件的根目录
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+
+# 定义媒体文件的URL前缀
+MEDIA_URL = '/media/'

@@ -36,6 +36,54 @@
 
 <script>
 import { localSet } from '@/utils'
+import axios from '@/utils/axios'
+import { reactive, ref } from 'vue'
+// const loginForm = ref(null)
+// const state = reactive({
+//   ruleForm: {
+//     userName: '',
+//     password: ''
+//   },
+//   rules: {
+//     // 表单验证规则
+//     userName: [
+//       { required: true, message: '请输入账号', trigger: 'blur' }
+//     ],
+//     password: [
+//       { required: true, message: '请输入密码', trigger: 'blur' }
+//     ]
+//   },
+//   checked: true
+// })
+//
+// const submitForm = async () => {
+//   loginForm.value.validate((valid) => {
+//         if (valid) {
+//           try {
+//         // 发送登录请求到后端
+//         const response = axios.post('/api/Merchant/login', {
+//           userName: this.state.ruleForm.userName,
+//           password: this.state.ruleForm.password
+//         });
+//         // 假设后端返回的数据中包含一个表示登录成功的字段，例如 success
+//         if (response.data.success) {
+//           localSet('token', res)
+//           this.$router.push('/merchant');
+//         } else {
+//           // 登录失败，处理错误信息，例如显示错误提示
+//           this.$message.error('登录失败，用户名或密码错误');
+//         }
+//       } catch (error) {
+//         // 发生错误，可以进行相应的处理，例如显示错误提示
+//         console.error('登录请求失败', error);
+//         this.$message.error('登录请求失败，请重试');
+//       }
+//         } else {
+//           console.log('error submit!!')
+//           return false;
+//         }
+//       })
+// }
 export default {
   data() {
     return {
@@ -61,11 +109,10 @@ export default {
     async submitForm() {
       try {
         // 发送登录请求到后端
-        const response = await this.$axios.post('/api/login', {
+        const response = await axios.post('/api/Merchant/login', {
           userName: this.state.ruleForm.userName,
           password: this.state.ruleForm.password
         });
-
         // 假设后端返回的数据中包含一个表示登录成功的字段，例如 success
         if (response.data.success) {
           localSet('token', res)

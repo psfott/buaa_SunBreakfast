@@ -29,7 +29,8 @@
 
 <script setup>
 import { onMounted, reactive, ref } from 'vue'
-import axios from '@/utils/axios'
+import axios from 'axios'
+// import axios from '@/utils/axios'
 import { ElMessage } from 'element-plus'
 
 const nameRef = ref(null)

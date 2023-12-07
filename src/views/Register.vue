@@ -37,6 +37,7 @@
 <script>
 import {localSet} from "@/utils";
 import axios from "@/utils/axios";
+// import axios from "axios";
 
 export default {
   data() {
@@ -54,12 +55,12 @@ export default {
     async submitForm() {
       try {
         // 发送登录请求到后端
-        const response = await this.$axios.post('/api/register', {
-          userName: this.state.ruleForm.userName,
-          password1: this.state.ruleForm.password1,
-          password2: this.state.ruleForm.password2,
-          telephone: this.state.ruleForm.telephone,
-          studentId: this.state.ruleForm.studentId,
+        const response = await axios.post('/api/Merchant/register', {
+          userName: this.state.registerForm.userName,
+          password1: this.state.registerForm.password1,
+          password2: this.state.registerForm.password2,
+          telephone: this.state.registerForm.telephone,
+          studentId: this.state.registerForm.studentId,
         });
 
         // 假设后端返回的数据中包含一个表示登录成功的字段，例如 success

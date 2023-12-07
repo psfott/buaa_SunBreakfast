@@ -24,7 +24,8 @@
 <script setup>
 import { reactive, ref } from 'vue'
 import { useRoute } from 'vue-router'
-import axios from '@/utils/axios'
+// import axios from '@/utils/axios'
+import axios from 'axios'
 import { ElMessage } from 'element-plus'
 
 const props = defineProps({

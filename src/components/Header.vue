@@ -31,7 +31,8 @@
 <script setup>
 import { onMounted, reactive } from 'vue'
 import { useRouter } from 'vue-router'
-import axios from '@/utils/axios'
+// import axios from '@/utils/axios'
+import axios from 'axios'
 import { localRemove, pathMap } from '@/utils'
 
 const router = useRouter()

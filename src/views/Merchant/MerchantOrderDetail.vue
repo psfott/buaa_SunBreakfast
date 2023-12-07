@@ -70,7 +70,8 @@
 <script setup>
 import { onMounted, reactive } from 'vue'
 import { useRoute } from 'vue-router'
-import axios from '@/utils/axios'
+// import axios from '@/utils/axios'
+import axios from 'axios'
 
 const route = useRoute()
 const { id } = route.query

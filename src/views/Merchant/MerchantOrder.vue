@@ -122,7 +122,8 @@
 import { onMounted, reactive } from 'vue'
 import { ElMessage } from 'element-plus'
 import { HomeFilled, Delete } from '@element-plus/icons-vue'
-import axios from '@/utils/axios'
+// import axios from '@/utils/axios'
+import axios from 'axios'
 
 const state = reactive({
   loading: false,
@@ -139,19 +140,19 @@ const state = reactive({
     label: '全部'
   }, {
     value: 0,
-    label: '待支付'
+    label: '用户下单'
   }, {
     value: 1,
-    label: '已支付'
+    label: '已出餐'
   }, {
     value: 2,
-    label: '配货完成'
+    label: '骑手接单'
   }, {
     value: 3,
-    label: '出库成功'
+    label: '骑手送达'
   }, {
     value: 4,
-    label: '交易成功'
+    label: '用户收餐'
   }, {
     value: -1,
     label: '手动关闭'

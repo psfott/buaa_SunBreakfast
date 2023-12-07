@@ -56,7 +56,8 @@
 <script setup>
 import { reactive, ref, onMounted, onBeforeUnmount, getCurrentInstance } from 'vue'
 import WangEditor from 'wangeditor'
-import axios from '@/utils/axios'
+// import axios from '@/utils/axios'
+import axios from 'axios'
 import { ElMessage } from 'element-plus'
 import { useRoute, useRouter } from 'vue-router'
 import { localGet, uploadImgServer, uploadImgsServer } from '@/utils'
