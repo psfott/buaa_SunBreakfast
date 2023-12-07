@@ -12,10 +12,7 @@ app.use(ElementPlus)
 app.use(Router)
 app.mount('#app')
 
-for (let iconName in ElementPlusIconsVue) {
-    app.component(iconName, ElementPlusIconsVue[iconName])
-}
+// 注册 Element Plus 图标
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
     app.component(key, component)
 }
-
