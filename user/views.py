@@ -5,7 +5,6 @@ from order.models import *
 
 import re
 import datetime
-import json
 from utils.token import create_token
 from user.models import *
 
@@ -513,31 +512,43 @@ def merchant_register(request):
         return JsonResponse({'error': 2001, 'msg': '请求方式错误'})
 
 
+class MerchantLoginForm(forms.Form):
+    user_name = forms.CharField(label="账号", max_length=128, widget=forms.TextInput())
+    password = forms.CharField(label="密码", max_length=128, widget=forms.PasswordInput())
+
+
 @csrf_exempt
 def merchant_login(request):
     if request.method == 'POST':
+        login_form = MerchantLoginForm(request.POST)
         print("登录111")
-        data = json.loads(request.body)
-        user_name = data.get('user_name')
-        password = data.get('password')
-        try:
-            merchant = Merchant.objects.get(user_name=user_name)
-        except:
-            return JsonResponse({'error': 4001, 'msg': '商家不存在'})
-        if merchant.password != password:
-            return JsonResponse({'error': 4002, 'msg': '密码错误'})
+        print(request.POST.get('user_name'))
+        print(login_form)
+        if login_form.is_valid():
+            print("vaild")
+            user_name = login_form.cleaned_data.get('user_name')
+            password = login_form.cleaned_data.get('password')
+            try:
+                merchant = Merchant.objects.get(user_name=user_name)
+            except:
+                return JsonResponse({'error': 4001, 'msg': '商家不存在'})
+            if merchant.password != password:
+                return JsonResponse({'error': 4002, 'msg': '密码错误'})
 
-        token = create_token(user_name)
-        return JsonResponse({
-            'error': 0,
-            'msg': "登录成功!",
-            'data': {
-                'userid': merchant.id,
-                'username': merchant.user_name,
-                'authorization': token,
-                'telephone': merchant.telephone
-            }
-        })
+            token = create_token(user_name)
+            return JsonResponse({
+                'error': 0,
+                'msg': "登录成功!",
+                'data': {
+                    'userid': merchant.id,
+                    'username': merchant.user_name,
+                    'authorization': token,
+                    'telephone': merchant.telephone
+                }
+            })
+        else:
+            return JsonResponse({'error': 3001, 'msg': '表单信息验证失败'})
+
     else:
         return JsonResponse({'error': 2001, 'msg': '请求方式错误'})
 
