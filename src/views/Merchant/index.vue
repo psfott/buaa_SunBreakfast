@@ -1,5 +1,6 @@
 <template>
   <div class="merchant—layout">
+<!--    <el-container v-if="state.showMenu" class="container">-->
     <el-container class="container">
       <el-aside class="aside">
         <div class="head">
@@ -13,36 +14,37 @@
             background-color="#222832"
             text-color="#fff"
             :router="true"
+            :default-openeds="state.defaultOpen"
+            :default-active='state.currentPath'
         >
           <el-sub-menu index="1">
             <template #title>
               <span>Dashboard</span>
             </template>
             <el-menu-item-group>
-              <el-menu-item index="/"><el-icon><Odometer /></el-icon>首页</el-menu-item>
-              <el-menu-item index="/add"><el-icon><Plus /></el-icon>添加商品</el-menu-item>
+              <el-menu-item index="/merchant/intro"><el-icon><Odometer /></el-icon>后台帮助</el-menu-item>
+
             </el-menu-item-group>
           </el-sub-menu>
           <el-sub-menu index="2">
             <template #title>
-              <span>首页配置</span>
+              <span>菜品管理</span>
             </template>
             <el-menu-item-group>
-              <el-menu-item index="/swiper"><el-icon><Picture /></el-icon>轮播图配置</el-menu-item>
-              <el-menu-item index="/hot"><el-icon><StarFilled /></el-icon>热销商品配置</el-menu-item>
-              <el-menu-item index="/new"><el-icon><Sell /></el-icon>新品上线配置</el-menu-item>
-              <el-menu-item index="/recommend"><el-icon><ShoppingCart /></el-icon>为你推荐配置</el-menu-item>
+              <el-menu-item index="/merchant/add"><el-icon><Plus /></el-icon>添加菜品</el-menu-item>
+              <el-menu-item index="/merchant/foods"><el-icon><Goods /></el-icon>菜品信息</el-menu-item>
+<!--              <el-menu-item index="/merchant/hot"><el-icon><StarFilled /></el-icon>热销套餐</el-menu-item>-->
             </el-menu-item-group>
           </el-sub-menu>
           <el-sub-menu index="3">
             <template #title>
-              <span>模块管理</span>
+              <span>订单管理</span>
             </template>
             <el-menu-item-group>
-              <el-menu-item index="/category"><el-icon><Menu /></el-icon>分类管理</el-menu-item>
-              <el-menu-item index="/good"><el-icon><Goods /></el-icon>商品管理</el-menu-item>
-              <el-menu-item index="/guest"><el-icon><User /></el-icon>会员管理</el-menu-item>
-              <el-menu-item index="/order"><el-icon><List /></el-icon>订单管理</el-menu-item>
+              <el-menu-item index="/merchant/category"><el-icon><Menu /></el-icon>分类管理</el-menu-item>
+<!--              <el-menu-item index="/merchant/good"><el-icon><Goods /></el-icon>套餐管理</el-menu-item>-->
+<!--              <el-menu-item index="/merchant/guest"><el-icon><User /></el-icon>会员管理</el-menu-item>-->
+              <el-menu-item index="/merchant/order"><el-icon><List /></el-icon>订单管理</el-menu-item>
             </el-menu-item-group>
           </el-sub-menu>
           <el-sub-menu index="4">
@@ -50,7 +52,7 @@
               <span>系统管理</span>
             </template>
             <el-menu-item-group>
-              <el-menu-item index="/account"><el-icon><Lock /></el-icon>修改密码</el-menu-item>
+              <el-menu-item index="/merchant/account"><el-icon><Lock /></el-icon>商户信息修改</el-menu-item>
             </el-menu-item-group>
           </el-sub-menu>
         </el-menu>
@@ -60,32 +62,52 @@
         <div class="main">
           <router-view />
         </div>
-        <Footer />
+<!--        <Footer />-->
       </el-container>
     </el-container>
+<!--    <el-container v-else class="container">-->
     <el-container class="container">
       <router-view />
     </el-container>
   </div>
 </template>
 
-<script>
+<script setup>
 
-export default {
-  data() {
-    return {
-      activeMenu: 'home' // 默认选中首页
-    };
-  },
-  methods: {
-    handleMenuSelect(index) {
-      this.activeMenu = Merchant;
-    },
-    handleNotificationClick() {
-      // 处理通知点击事件，你可以弹出通知列表或其他操作
-    }
-  }
-};
+import {reactive} from "vue";
+import {localGet, pathMap} from "@/utils";
+import router from "@/router";
+import Header from "@/components/Header.vue";
+const noMenu = ['/login']
+
+const state = reactive({
+  showMenu: true,
+  defaultOpen: ['1', '2', '3', '4'],
+  currentPath: '/merchant',
+})
+
+// router.afterEach((to, from) => {
+//   state.showMenu = !noMenu.includes(to.path)
+// })
+
+router.beforeEach((to, from, next) => {
+  // if (to.path == '/login') {
+  //   // 如果路径是 /login 则正常执行
+  //   next()
+  // } else {
+  //   // 如果不是 /login，判断是否有 token
+  //   if (!localGet('token')) {
+  //     // 如果没有，则跳至登录页面
+  //     next({ path: '/login' })
+  //   } else {
+  //     // 否则继续执行
+  //     next()
+  //   }
+  // }
+  next()
+  state.currentPath = to.path
+  document.title = pathMap[to.name]
+})
 </script>
 
 

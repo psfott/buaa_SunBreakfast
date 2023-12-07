@@ -5,13 +5,14 @@
       <div class="logo">
         <!-- 外卖系统Logo，你可以替换成实际的Logo -->
         <img src="/logo.png" alt="外卖系统Logo">
+        <span>北航阳光早餐</span>
       </div>
 
       <div class="user-info">
         <img class="avatar" src="@/assets/images/user_avatar.jpg" alt="用户头像">
         <div class="user-details">
           <span class="user-id">psfott</span>
-          <span class="user-role highlighted" >学生</span>
+          <span class="user-role" >学生</span>
         </div>
           <router-link to="/" class="logout-link">
           <el-button type="text" @click="logout">退出登录</el-button>
@@ -105,19 +106,33 @@ export default {
   box-sizing: border-box;
 }
 
+.logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 50px;
+}
+
+.logo > div {
+  display: flex;
+  align-items: center;
+}
+
+.logo span {
+  font-size: 20px;
+  color: #ffffff;
+}
+
 .logo img {
-  height: 40px;
-  width: auto;
+  width: 50px;
+  height: 50px;
+  margin-right: 10px;
 }
 
 .aside {
   background-color: #35495e;
 }
 
-.logo {
-  text-align: center;
-  padding: 10px;
-}
 
 .container {
   height: 100vh;
@@ -137,9 +152,10 @@ export default {
 }
 
 .user-role {
-  border: 2px solid yellow; /* Yellow highlighted border */
+  background-color: orange;
   padding: 5px;
   margin-top: 5px; /* Adjust the margin as needed */
+  font-family: "Cooper Black",serif
 }
 
 .avatar {

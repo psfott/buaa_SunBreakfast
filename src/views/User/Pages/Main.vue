@@ -37,7 +37,7 @@ export default {
         {
           id: 1,
           name: "Merchant A",
-          image: "/merchant_a.jpg", // Replace with actual image path
+          image: "merchant_a.jpg", // Replace with actual image path
           address: "123 Main St, City",
           rating: 4.2,
         },
@@ -97,6 +97,13 @@ export default {
           address: "606 Fir St, Municipality",
           rating: 4.4,
         },
+        {
+          id: 10,
+          name: "Merchant J",
+          image: "/merchant_j.jpg",
+          address: "503 Ps St, NewYork",
+          rating: 5.0,
+        }
       ],
 
     };
