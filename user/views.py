@@ -390,7 +390,7 @@ def rider_login(request):
         print("登录111")
         print(login_form)
         if login_form.is_valid():
-            user_name = login_form.cleaned_data.get('user_name')
+            user_name = login_form.cleaned_data.get('userName')
             password = login_form.cleaned_data.get('password')
             print(user_name)
             try:
@@ -513,7 +513,8 @@ def merchant_register(request):
 
 
 class MerchantLoginForm(forms.Form):
-    user_name = forms.CharField(label="账号", max_length=128, widget=forms.TextInput())
+    print(forms.Form)
+    userName = forms.CharField(label="账号", max_length=128, widget=forms.TextInput())
     password = forms.CharField(label="密码", max_length=128, widget=forms.PasswordInput())
 
 
@@ -521,13 +522,12 @@ class MerchantLoginForm(forms.Form):
 def merchant_login(request):
     if request.method == 'POST':
         login_form = MerchantLoginForm(request.POST)
-        print("登录111")
-        # print(request.POST.get('user_name'))
-        print(login_form)
+        # print(login_form)
+        print("尝试登录")
         if login_form.is_valid():
-            print("vaild")
-            user_name = login_form.cleaned_data.get('user_name')
-            password = login_form.cleaned_data.get('password')
+            print(login_form.data.get("userName") + "尝试登录")
+            user_name = login_form.data.get("userName")
+            password = login_form.data.get("password")
             try:
                 merchant = Merchant.objects.get(user_name=user_name)
             except:

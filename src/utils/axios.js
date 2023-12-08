@@ -9,8 +9,7 @@ const httpInstance = axios.create({
   timeout: 5000
 })
 
-// axios.defaults.baseURL = 'http://127.0.0.1:8000'
-
+httpInstance.defaults.headers['Content-Type'] = 'multipart/form-data'
 // 请求头，headers 信息
 // axios.defaults.headers['X-Requested-With'] = 'XMLHttpRequest'
 // // axios.defaults.headers['token'] = localGet('token') || ''
@@ -19,7 +18,7 @@ const httpInstance = axios.create({
 
 httpInstance.interceptors.request.use(config => {
   // 设置请求头
-  config.headers['Content-Type'] = 'application/x-www-form-urlencoded'
+  // config.headers['Content-Type'] = 'application/x-www-form-urlencoded'
 
   // 1. 从 pinia 获取 token 数据
   // const userStore = useUserStore()
@@ -30,13 +29,12 @@ httpInstance.interceptors.request.use(config => {
   //   config.data.username = username
   //   config.data.authorization = token
   // }
-
   return config
 }, e => Promise.reject(e))
 
 
 // 请求拦截器，内部根据返回值，重新组装，统一管理。
-axios.interceptors.response.use(function (res){
+httpInstance.interceptors.response.use(function (res){
   if (res.data.error !== 0) {
     // 统一错误提示
 
@@ -53,7 +51,7 @@ axios.interceptors.response.use(function (res){
       )
           .then(() => {
             console.log(1)
-            router.push({ path: '/login' })
+            router.push({ path: 'merchant/login' })
           })
           .catch(() => {
             ElMessage({

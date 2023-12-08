@@ -8,7 +8,7 @@
         </div>
       </div>
       <el-form label-position="top" :rules="rules" :model="ruleForm" ref="loginForm" class="login-form">
-        <el-form-item label="账号" prop="username">
+        <el-form-item label="账号" prop="user_name">
           <el-input type="text" v-model.trim="ruleForm.user_name" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="密码" prop="password">
@@ -17,7 +17,7 @@
         <el-form-item>
           <div style="color: #333">登录表示您已同意<a>《服务条款》</a></div>
           <el-button style="width: 100%" type="primary" @click="submitForm">立即登录</el-button>
-          <el-checkbox v-model="checked" @change="!checked">下次自动登录</el-checkbox>
+<!--          <el-checkbox v-model="checked" @change="!checked">下次自动登录</el-checkbox>-->
         </el-form-item>
         <el-row style="text-align: center;margin-top:-10px">
           <router-link to="/forgot-password">
