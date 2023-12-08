@@ -7,17 +7,17 @@
           <div class="title">北航阳光早餐系统</div>
         </div>
       </div>
-      <el-form label-position="top" :rules="state.rules" :model="state.ruleForm" ref="loginForm" class="login-form">
+      <el-form label-position="top" :rules="rules" :model="ruleForm" ref="loginForm" class="login-form">
         <el-form-item label="账号" prop="username">
-          <el-input type="text" v-model.trim="state.ruleForm.user_name" autocomplete="off"></el-input>
+          <el-input type="text" v-model.trim="ruleForm.user_name" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="密码" prop="password">
-          <el-input type="password" v-model.trim="state.ruleForm.password" autocomplete="off"></el-input>
+          <el-input type="password" v-model.trim="ruleForm.password" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item>
           <div style="color: #333">登录表示您已同意<a>《服务条款》</a></div>
           <el-button style="width: 100%" type="primary" @click="submitForm">立即登录</el-button>
-          <el-checkbox v-model="state.checked" @change="!state.checked">下次自动登录</el-checkbox>
+          <el-checkbox v-model="checked" @change="!checked">下次自动登录</el-checkbox>
         </el-form-item>
         <el-row style="text-align: center;margin-top:-10px">
           <router-link to="/forgot-password">
@@ -34,10 +34,59 @@
   </div>
 </template>
 
-<script>
-import { localSet } from '@/utils'
-import axios from '@/utils/axios'
-import { reactive, ref } from 'vue'
+<script setup>
+import { ref } from 'vue'
+import {useRouter} from "vue-router";
+import httpInstance from '@/utils/axios'
+const ruleForm = ref({
+  user_name: '',
+  password: ''
+})
+
+const rules = {
+  user_name: [
+    { required: true, message: '用户名不能为空', trigger: 'blur' }
+  ],
+  password: [
+    { required: true, message: '密码不能为空', trigger: 'blur' },
+    { min: 6, max: 14, message: '密码长度为6-14个字符', trigger: 'blur' },
+  ]
+}
+
+const loginForm = ref(null)
+const router = useRouter()
+const submitForm = () => {
+  const { user_name, password } = ruleForm.value
+  if(user_name == ''){
+    ElMessage({ type: 'warning', message: '用户名不能为空' })
+  }else if(password == ''){
+    ElMessage({ type: 'warning', message: '密码不能为空' })
+  }else{
+    httpInstance.post('/Merchant/login',{
+      userName: ruleForm.value.user_name,
+      password: ruleForm.value.password
+    }).then(res => {
+      console.log(res.data)
+      // userStore.userInfo = res.data
+      // console.log(userStore.userInfo)
+      ElMessage({ type: 'success', message: '登录成功' })
+      router.replace({ path: '/merchant' })
+    })
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 // const loginForm = ref(null)
 // const state = reactive({
 //   ruleForm: {
@@ -70,44 +119,44 @@ import { reactive, ref } from 'vue'
 //         }
 //   })
 // }
-export default {
-  data() {
-    return {
-      state: {
-        ruleForm: {
-          user_name: '',
-          password: ''
-        },
-        rules: {
-          // 表单验证规则
-          user_name: [
-            { required: true, message: '请输入账号', trigger: 'blur' }
-          ],
-          password: [
-            { required: true, message: '请输入密码', trigger: 'blur' }
-          ]
-        },
-        checked: false
-      }
-    };
-  },
-  methods: {
-
-    async submitForm() {
-        // console.log(this.state.ruleForm.user_name)
-        // console.log(this.state.ruleForm.password)
-        var formData=new FormData();
-        formData.append('user_name',this.state.ruleForm.user_name);
-        formData.append('password',this.state.ruleForm.password);
-        console.log(formData)
-        axios.post('/api/Merchant/login',formData).then(
-            res =>{
-                this.$router.push('/merchant');
-            }
-        ).catch((err) => {this.$message.error(err);})
-    }
-  }
-};
+// export default {
+//   data() {
+//     return {
+//       state: {
+//         ruleForm: {
+//           user_name: '',
+//           password: ''
+//         },
+//         rules: {
+//           // 表单验证规则
+//           user_name: [
+//             { required: true, message: '请输入账号', trigger: 'blur' }
+//           ],
+//           password: [
+//             { required: true, message: '请输入密码', trigger: 'blur' }
+//           ]
+//         },
+//         checked: false
+//       }
+//     };
+//   },
+//   methods: {
+//
+//     async submitForm() {
+//         // console.log(this.state.ruleForm.user_name)
+//         // console.log(this.state.ruleForm.password)
+//         var formData=new FormData();
+//         formData.append('user_name',this.state.ruleForm.user_name);
+//         formData.append('password',this.state.ruleForm.password);
+//         console.log(formData)
+//         axios.post('/api/Merchant/login',formData).then(
+//             res =>{
+//                 this.$router.push('/merchant');
+//             }
+//         ).catch((err) => {this.$message.error(err);})
+//     }
+//   }
+// };
 </script>
 
 <style scoped>

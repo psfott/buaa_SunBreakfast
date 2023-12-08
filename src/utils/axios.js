@@ -1,34 +1,82 @@
 import axios from 'axios'
-import { ElMessage } from 'element-plus'
+import {ElMessage, ElMessageBox} from 'element-plus'
 import router from '@/router/index'
 import { localGet } from './index'
 
 
-
-axios.defaults.baseURL = 'http://127.0.0.1:8000'
-// 携带 cookie，对目前的项目没有什么作用，因为我们是 token 鉴权
-axios.defaults.withCredentials = true
-// 请求头，headers 信息
-axios.defaults.headers['X-Requested-With'] = 'XMLHttpRequest'
-// axios.defaults.headers['token'] = localGet('token') || ''
-// 默认 post 请求，使用 application/json 形式
-axios.defaults.headers.post['Content-Type'] = 'multipart/form-data'
-
-// 请求拦截器，内部根据返回值，重新组装，统一管理。
-axios.interceptors.response.use(res => {
-  if (typeof res.data !== 'object') {
-    ElMessage.error('服务端异常！')
-    return Promise.reject(res)
-  }
-  if (res.data.resultCode != 200) {
-    if (res.data.message) ElMessage.error(res.data.message)
-    if (res.data.resultCode == 419) {
-      router.push({ path: '/login' })
-    }
-    return Promise.reject(res.data)
-  }
-
-  return res.data.data
+const httpInstance = axios.create({
+  baseURL: 'http://127.0.0.1:8000/api',
+  timeout: 5000
 })
 
-export default axios
+// axios.defaults.baseURL = 'http://127.0.0.1:8000'
+
+// 请求头，headers 信息
+// axios.defaults.headers['X-Requested-With'] = 'XMLHttpRequest'
+// // axios.defaults.headers['token'] = localGet('token') || ''
+// // 默认 post 请求，使用 application/json 形式
+// axios.defaults.headers.post['Content-Type'] = 'multipart/form-data'
+
+httpInstance.interceptors.request.use(config => {
+  // 设置请求头
+  config.headers['Content-Type'] = 'application/x-www-form-urlencoded'
+
+  // 1. 从 pinia 获取 token 数据
+  // const userStore = useUserStore()
+  // const username = userStore.userInfo.username
+  // const token = userStore.userInfo.authorization
+  // if (username && token) {
+  //   config.data = config.data || {}
+  //   config.data.username = username
+  //   config.data.authorization = token
+  // }
+
+  return config
+}, e => Promise.reject(e))
+
+
+// 请求拦截器，内部根据返回值，重新组装，统一管理。
+axios.interceptors.response.use(function (res){
+  if (res.data.error !== 0) {
+    // 统一错误提示
+
+    if (res.data.error === 401 || res.data.error === 402) {
+      console.log(1)
+      ElMessageBox.confirm(
+          '该操作需要先完成登录~',
+          '提示',
+          {
+            confirmButtonText: '去登录',
+            cancelButtonText: '取消',
+            type: 'warning',
+          }
+      )
+          .then(() => {
+            console.log(1)
+            router.push({ path: '/login' })
+          })
+          .catch(() => {
+            ElMessage({
+              type: 'info',
+              message: '取消',
+            })
+          })
+    }
+    ElMessage({
+      type: 'warning',
+      message: res.data.msg
+    })
+
+    return Promise.reject(res)
+  }
+  else {
+    console.log("请求成功")
+    // ElMessage({
+    //   type: 'success',
+    //   message: res.data.msg
+    // })
+    return res.data
+  }
+})
+
+export default httpInstance
