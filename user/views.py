@@ -482,7 +482,7 @@ def merchant_register(request):
         password2 = register_form.data.get('password2')
         telephone = register_form.data.get('telephone')
 
-        repeated_name = Student.objects.filter(user_name=user_name)
+        repeated_name = Merchant.objects.filter(user_name=user_name)
         if repeated_name.exists():
             return JsonResponse({'error': 4001, 'msg': '商户名已存在'})
         # 检测两次密码是否一致
@@ -593,10 +593,28 @@ def add_food(request):
 def add_type(request):
     if request.method == "POST":
         name = request.POST.get("name")
-        new_type = Type()
-        new_type.name = name
-        new_type.save()
-        return JsonResponse({"error": 0, "msg": "商家添加标签成功"})
+        merchant_id = request.POST.get("merchant_id")
+        repeated_name = Type.objects.filter(name=name, merchant_id=merchant_id)
+        if repeated_name.exists():
+            return JsonResponse({'error': 4001, 'msg': '标签名已存在'})
+        else:
+            new_type = Type()
+            new_type.name = name
+            new_type.save()
+            return JsonResponse({"error": 0, "msg": "商家添加标签成功"})
+    else:
+        return JsonResponse({"error": 2001, "msg": "请求方式错误"})
+
+
+@csrf_exempt
+def change_type_name(request):
+    if request.method == "POST":
+        name = request.POST.get("name")
+        type_id = request.POST.get("type_id")
+        type = Type.objects.filter(type_id=type_id)
+        type.name = name
+        type.save()
+        return JsonResponse({"error": 0, "msg": "商家修改标签名成功"})
     else:
         return JsonResponse({"error": 2001, "msg": "请求方式错误"})
 
