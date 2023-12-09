@@ -28,7 +28,9 @@ urlpatterns = [
     path('Merchant/order_get', order_get_merchant),
     path('Merchant/add_food', add_food),
     path('Merchant/change_food', change_food),
+    path('Merchant/get_types', get_type),
     path('Merchant/add_type', add_type),
+    path('Merchant/change_type', change_type_name),
     path('Merchant/delete_type', delete_type),
     path('Merchant/history', query_merchant_history),
     # Food

@@ -1,4 +1,5 @@
 from django import forms
+from django.core.paginator import Paginator, EmptyPage
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from order.models import *
@@ -584,6 +585,33 @@ def add_food(request):
         new_food.status = True
         new_food.save()
         return JsonResponse({"error": 0, "msg": "商家添加菜品成功"})
+    else:
+        return JsonResponse({"error": 2001, "msg": "请求方式错误"})
+
+
+# 商家获取标签列表
+@csrf_exempt
+def get_type(request):
+    if request.method == "POST":
+        merchant_id = request.POST.get("merchant_id")
+        page_num = request.POST.get("page_num")
+        page_size = request.POST.get("page_size")
+        types = Type.objects.filter(merchant_id=merchant_id)
+        paginator = Paginator(types, page_size)
+
+        try:
+            current_page = paginator.page(page_num)
+        except EmptyPage:
+            return JsonResponse({"error": 2002, "msg": "无效的页码"})
+
+        # 获取当前页的类型数据
+        current_types = current_page.object_list
+
+        # 在这里你可以进一步处理 current_types，如果需要的话
+        return JsonResponse({"error": 0,
+                             "data": {
+                                 "current_page": current_types
+                             }})
     else:
         return JsonResponse({"error": 2001, "msg": "请求方式错误"})
 
