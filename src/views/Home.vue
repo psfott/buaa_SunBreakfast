@@ -1,17 +1,18 @@
 <template>
   <div class="home">
     <h1 class="title">北航阳光早餐系统</h1>
-    <router-link to="/login">
-      <el-button @click="showMessage" type="success" size="large" round :icon="User">我是学生</el-button>
-      <el-button @click="showMessage" type="primary" size="large" round :icon="Avatar">我是商家</el-button>
-      <el-button @click="showMessage" type="danger" size="large" round :icon="UserFilled">我是骑手</el-button>
-    </router-link>
+<!--    <router-link to="/login">-->
+      <el-button @click="loginUser" type="success" size="large" round :icon="User">我是学生</el-button>
+      <el-button @click="loginMerchant" type="primary" size="large" round :icon="Avatar">我是商家</el-button>
+      <el-button @click="loginRider" type="danger" size="large" round :icon="UserFilled">我是骑手</el-button>
+<!--    </router-link>-->
   </div>
 </template>
 
 <script>
 import {ElMessage} from "element-plus";
 import {Avatar, User, UserFilled} from "@element-plus/icons-vue";
+import router from "@/router";
 
 export default {
   computed: {
@@ -29,6 +30,12 @@ export default {
     return{}
   },
   methods: {
+    loginMerchant(){
+      router.replace('/merchantLogin')
+      this.showMessage()
+    },
+
+
     showMessage() {
       ElMessage({type: 'success',message:'欢迎光临'})
     }

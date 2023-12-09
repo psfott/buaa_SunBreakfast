@@ -29,10 +29,12 @@
 </template>
 
 <script setup>
-import { onMounted, reactive } from 'vue'
-import { useRouter } from 'vue-router'
-import axios from '@/utils/axios'
-import { localRemove, pathMap } from '@/utils'
+import {onMounted, reactive} from 'vue'
+import {useRouter} from 'vue-router'
+import {localRemove, pathMap} from '@/utils'
+import {useMerchantStore} from '@/stores/merchantStore'
+
+const merchantStore = useMerchantStore()
 
 const router = useRouter()
 const state = reactive({
@@ -50,8 +52,7 @@ onMounted(() => {
 })
 // 获取用户信息
 const getUserInfo = async () => {
-  // const userInfo = await axios.get('/adminUser/profile')
-  // state.userInfo = userInfo
+  state.userInfo = merchantStore.merchantInfo.user_name
 }
 // 退出登录
 const logout = () => {

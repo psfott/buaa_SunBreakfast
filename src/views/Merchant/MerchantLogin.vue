@@ -36,8 +36,12 @@
 
 <script setup>
 import { ref } from 'vue'
-import {useRouter} from "vue-router";
+import {useRouter} from "vue-router"
 import httpInstance from '@/utils/axios'
+import { useMerchantStore } from '@/stores/merchantStore'
+import {ElMessage} from "element-plus";
+
+const merchantStore = useMerchantStore()
 const ruleForm = ref({
   user_name: '',
   password: ''
@@ -62,101 +66,15 @@ const submitForm = () => {
   }else if(password == ''){
     ElMessage({ type: 'warning', message: '密码不能为空' })
   }else{
-    httpInstance.post('/Merchant/login',{
-      userName: ruleForm.value.user_name,
-      password: ruleForm.value.password
-    }).then(res => {
+    httpInstance.post('/Merchant/login',ruleForm.value).then(res => {
       console.log(res.data)
-      // userStore.userInfo = res.data
-      // console.log(userStore.userInfo)
+      merchantStore.merchantInfo = res.data
+      console.log(merchantStore.merchantInfo)
       ElMessage({ type: 'success', message: '登录成功' })
       router.replace({ path: '/merchant' })
     })
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-// const loginForm = ref(null)
-// const state = reactive({
-//   ruleForm: {
-//     user_name: '',
-//     password: ''
-//   },
-//   rules: {
-//     // 表单验证规则
-//     user_name: [
-//       { required: true, message: '请输入账号', trigger: 'blur' }
-//     ],
-//     password: [
-//       { required: true, message: '请输入密码', trigger: 'blur' }
-//     ]
-//   },
-//   checked: true
-// })
-//
-// const submitForm = async () => {
-//   loginForm.value.validate((valid) => {
-//         if (valid) {
-//         // 发送登录请求到后端
-//           axios.post('/api/Merchant/login', ruleForm).then(res => {
-//             localSet('token', res)
-//             window.location.href = '/'
-//           })
-//         } else {
-//           console.log('error submit!!')
-//           return false;
-//         }
-//   })
-// }
-// export default {
-//   data() {
-//     return {
-//       state: {
-//         ruleForm: {
-//           user_name: '',
-//           password: ''
-//         },
-//         rules: {
-//           // 表单验证规则
-//           user_name: [
-//             { required: true, message: '请输入账号', trigger: 'blur' }
-//           ],
-//           password: [
-//             { required: true, message: '请输入密码', trigger: 'blur' }
-//           ]
-//         },
-//         checked: false
-//       }
-//     };
-//   },
-//   methods: {
-//
-//     async submitForm() {
-//         // console.log(this.state.ruleForm.user_name)
-//         // console.log(this.state.ruleForm.password)
-//         var formData=new FormData();
-//         formData.append('user_name',this.state.ruleForm.user_name);
-//         formData.append('password',this.state.ruleForm.password);
-//         console.log(formData)
-//         axios.post('/api/Merchant/login',formData).then(
-//             res =>{
-//                 this.$router.push('/merchant');
-//             }
-//         ).catch((err) => {this.$message.error(err);})
-//     }
-//   }
-// };
 </script>
 
 <style scoped>

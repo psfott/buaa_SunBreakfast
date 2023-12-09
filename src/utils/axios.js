@@ -1,8 +1,7 @@
 import axios from 'axios'
 import {ElMessage, ElMessageBox} from 'element-plus'
 import router from '@/router/index'
-import { localGet } from './index'
-
+import { useMerchantStore } from '@/stores/merchantStore'
 
 const httpInstance = axios.create({
   baseURL: 'http://127.0.0.1:8000/api',
@@ -18,17 +17,17 @@ httpInstance.defaults.headers['Content-Type'] = 'multipart/form-data'
 
 httpInstance.interceptors.request.use(config => {
   // 设置请求头
-  // config.headers['Content-Type'] = 'application/x-www-form-urlencoded'
+    config.headers['Content-Type'] = 'application/x-www-form-urlencoded'
 
   // 1. 从 pinia 获取 token 数据
-  // const userStore = useUserStore()
-  // const username = userStore.userInfo.username
-  // const token = userStore.userInfo.authorization
-  // if (username && token) {
-  //   config.data = config.data || {}
-  //   config.data.username = username
-  //   config.data.authorization = token
-  // }
+  const merchantStore = useMerchantStore()
+  const username = merchantStore.merchantInfo.username
+  const token = merchantStore.merchantInfo.authorization
+  if (username && token) {
+    config.data = config.data || {}
+    config.data.username = username
+    config.data.authorization = token
+  }
   return config
 }, e => Promise.reject(e))
 

@@ -34,7 +34,7 @@
       </el-table-column>
       <el-table-column
           prop="categoryRank"
-          label="排序值"
+          label="分类编号"
           width="120"
       >
       </el-table-column>
@@ -50,7 +50,6 @@
       >
         <template #default="scope">
           <a style="cursor: pointer; margin-right: 10px" @click="handleEdit(scope.row.categoryId)">修改</a>
-          <a style="cursor: pointer; margin-right: 10px" @click="handleNext(scope.row)">下级分类</a>
           <el-popconfirm
               title="确定删除吗？"
               confirmButtonText='确定'
@@ -82,8 +81,7 @@ import { onMounted, onUnmounted, reactive, ref, toRefs, watchEffect } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { Plus, Delete } from '@element-plus/icons-vue'
-import axios from 'axios'
-// import axios from '@/utils/axios'
+import httpInstance from '@/utils/axios'
 import DialogAddCategory from '@/components/DialogAddCategory.vue'
 
 const addCate = ref(null)
@@ -97,8 +95,7 @@ const state = reactive({
   currentPage: 1, // 当前页
   pageSize: 10, // 分页大小
   type: 'add', // 操作类型
-  level: 1,
-  parent_id: 0
+  level: 1
 })
 onMounted(() => {
   getCategory()
@@ -117,42 +114,21 @@ onUnmounted(() => {
 })
 // 获取分类列表
 const getCategory = () => {
-  const { level = 1, parent_id = 0 } = route.query
   state.loading = true
-  axios.get('/categories', {
+  httpInstance.get('/categories', {
     params: {
       pageNumber: state.currentPage,
       pageSize: state.pageSize,
-      categoryLevel: level,
-      parentId: parent_id
+      categoryLevel: level
     }
   }).then(res => {
     state.tableData = res.list
     state.total = res.totalCount
     state.currentPage = res.currPage
     state.loading = false
-    state.level = level
-    state.parentId = parent_id
   })
 }
-const changePage = (val) => {
-  state.currentPage = val
-  getCategory()
-}
-const handleNext = (item) => {
-  const levelNumber = item.categoryLevel + 1
-  if (levelNumber == 4) {
-    ElMessage.error('没有下一级')
-    return
-  }
-  router.push({
-    name: `level${levelNumber}`,
-    query: {
-      level: levelNumber,
-      parent_id: item.categoryId
-    }
-  })
-}
+
 // 添加分类
 const handleAdd = () => {
   state.type = 'add'

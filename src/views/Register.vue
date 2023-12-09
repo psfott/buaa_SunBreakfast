@@ -37,7 +37,11 @@
 <script setup>
 import { ref } from 'vue'
 import {useRouter} from "vue-router";
+
 import httpInstance from "@/utils/axios";
+import {ElMessage} from "element-plus";
+import { useMerchantStore } from '@/stores/merchantStore'
+const merchantStore = useMerchantStore()
 
 const registerForm = ref({
   user_name: '',
@@ -59,10 +63,10 @@ const submitForm = () => {
   }else{
     httpInstance.post('/Merchant/register',registerForm.value).then(res => {
       console.log(res.data)
-      // userStore.userInfo = res.data
-      // console.log(userStore.userInfo)
-      ElMessage({ type: 'success', message: '注册成功' })
-      router.replace({ path: '/merchant/login' })
+      merchantStore.merchantInfo = res.data
+      console.log(merchantStore.merchantInfo)
+      ElMessage({ type: 'success', message: '注册成功，已自动登录' })
+      router.replace({ path: '/merchant' })
     })
   }
 };
