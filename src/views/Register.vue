@@ -8,20 +8,20 @@
         </div>
       </div>
       <el-form label-position="top" :ref="registerForm" :model="registerForm" class="register-form">
-        <el-form-item label="用户名" prop="username">
-          <el-input v-model="registerForm.username" placeholder="请输入用户名"></el-input>
+        <el-form-item label="用户名" prop="user_name">
+          <el-input v-model="registerForm.user_name" placeholder="请输入用户名"></el-input>
         </el-form-item>
-        <el-form-item label="手机号" prop="phone">
-          <el-input v-model="registerForm.phone" placeholder="请输入手机号"></el-input>
+        <el-form-item label="手机号" prop="telephone">
+          <el-input v-model="registerForm.telephone" placeholder="请输入手机号"></el-input>
         </el-form-item>
-        <el-form-item label="学号" prop="studentId">
-          <el-input type="studentId" v-model="registerForm.studentId" placeholder="请输入学号"></el-input>
-        </el-form-item>
-        <el-form-item label="密码" prop="password">
-          <el-input type="password" v-model="registerForm.password" placeholder="请输入密码"></el-input>
+<!--        <el-form-item label="学号" prop="studentId">-->
+<!--          <el-input type="studentId" v-model="registerForm.studentId" placeholder="请输入学号"></el-input>-->
+<!--        </el-form-item>-->
+        <el-form-item label="密码" prop="password1">
+          <el-input type="password1" v-model="registerForm.password1" placeholder="请输入密码"></el-input>
         </el-form-item>
         <el-form-item label="确认密码" prop="confirmPassword">
-          <el-input type="password" v-model="registerForm.confirmPassword" placeholder="请确认密码"></el-input>
+          <el-input type="password2" v-model="registerForm.password2" placeholder="请确认密码"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="submitForm">注册</el-button>
@@ -34,50 +34,36 @@
   </div>
 </template>
 
-<script>
-import {localSet} from "@/utils";
-import axios from "@/utils/axios";
-// import axios from "axios";
+<script setup>
+import { ref } from 'vue'
+import {useRouter} from "vue-router";
+import httpInstance from "@/utils/axios";
 
-export default {
-  data() {
-    return {
-      registerForm: {
-        userName: '',
-        password1: '',
-        password2: '',
-        telephone: '',
-        studentId:''
-      }
-    };
-  },
-  methods: {
-    async submitForm() {
-      try {
-        // 发送登录请求到后端
-        const response = await axios.post('/api/Merchant/register', {
-          userName: this.state.registerForm.userName,
-          password1: this.state.registerForm.password1,
-          password2: this.state.registerForm.password2,
-          telephone: this.state.registerForm.telephone,
-          studentId: this.state.registerForm.studentId,
-        });
-
-        // 假设后端返回的数据中包含一个表示登录成功的字段，例如 success
-        if (response.data.success) {
-          console.log('注册成功，请重新登录');
-          this.$router.push('/login');
-        } else {
-          // 登录失败，处理错误信息，例如显示错误提示
-          this.$message.error('注册失败，用户名或密码错误');
-        }
-      } catch (error) {
-        // 发生错误，可以进行相应的处理，例如显示错误提示
-        console.error('注册请求失败', error);
-        this.$message.error('注册请求失败，请重试');
-      }
-      // 在这里可以添加表单验证逻辑
-    }
+const registerForm = ref({
+  user_name: '',
+  password1: '',
+  password2: '',
+  telephone: ''
+})
+const router = useRouter()
+const submitForm = () => {
+  const { user_name, password1,password2,telephone } = registerForm.value
+  if(user_name == ''){
+    ElMessage({ type: 'warning', message: '用户名不能为空' })
+  }else if(password1 == ''){
+    ElMessage({ type: 'warning', message: '密码不能为空' })
+  }else if(password2 == ''){
+    ElMessage({ type: 'warning', message: '请确认密码' })
+  }else if(telephone == ''){
+    ElMessage({ type: 'warning', message: '请输入手机号' })
+  }else{
+    httpInstance.post('/Merchant/register',registerForm.value).then(res => {
+      console.log(res.data)
+      // userStore.userInfo = res.data
+      // console.log(userStore.userInfo)
+      ElMessage({ type: 'success', message: '注册成功' })
+      router.replace({ path: '/merchant/login' })
+    })
   }
 };
 </script>

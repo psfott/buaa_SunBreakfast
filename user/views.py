@@ -25,11 +25,11 @@ def student_register(request):
         register_form = StudentRegisterForm(request.POST)
         # if register_form.is_valid():
         print(register_form)
-        user_name = register_form.cleaned_data.get('user_name')
-        password1 = register_form.cleaned_data.get('password1')
-        password2 = register_form.cleaned_data.get('password2')
-        telephone = register_form.cleaned_data.get('telephone')
-        student_id = register_form.cleaned_data.get('student_id')
+        user_name = register_form.data.get('user_name')
+        password1 = register_form.data.get('password1')
+        password2 = register_form.data.get('password2')
+        telephone = register_form.data.get('telephone')
+        student_id = register_form.data.get('student_id')
 
         repeated_name = Student.objects.filter(user_name=user_name)
         if repeated_name.exists():
@@ -81,8 +81,8 @@ def student_login(request):
         print("登录111")
         print(login_form)
         if login_form.is_valid():
-            user_name = login_form.cleaned_data.get('user_name')
-            password = login_form.cleaned_data.get('password')
+            user_name = login_form.data.get('user_name')
+            password = login_form.data.get('password')
             print(user_name)
             try:
                 student = Student.objects.get(user_name=user_name)
@@ -160,8 +160,8 @@ def order_comment(request):
         comment_form = OrderComment(request.POST, request.FILES)
 
         if comment_form.is_valid():
-            content = comment_form.cleaned_data.get('content')
-            score = comment_form.cleaned_data.get('score')
+            content = comment_form.data.get('content')
+            score = comment_form.data.get('score')
 
             new_comment = Comment.objects.create(order_id=order_id, user_id=order.user_id, content=content, score=score)
 
@@ -341,10 +341,10 @@ def rider_register(request):
         register_form = RiderRegisterForm(request.POST)
         # if register_form.is_valid():
         print(register_form)
-        user_name = register_form.cleaned_data.get('userName')
-        password1 = register_form.cleaned_data.get('password1')
-        password2 = register_form.cleaned_data.get('password2')
-        telephone = register_form.cleaned_data.get('telephone')
+        user_name = register_form.data.get('user_name')
+        password1 = register_form.data.get('password1')
+        password2 = register_form.data.get('password2')
+        telephone = register_form.data.get('telephone')
 
         repeated_name = Rider.objects.filter(user_name=user_name)
         if repeated_name.exists():
@@ -390,8 +390,8 @@ def rider_login(request):
         print("登录111")
         print(login_form)
         if login_form.is_valid():
-            user_name = login_form.cleaned_data.get('userName')
-            password = login_form.cleaned_data.get('password')
+            user_name = login_form.data.get('user_name')
+            password = login_form.data.get('password')
             print(user_name)
             try:
                 rider = Rider.objects.get(user_name=user_name)
@@ -477,10 +477,10 @@ def merchant_register(request):
         register_form = MerchantRegisterForm(request.POST)
         # if register_form.is_valid():
         print(register_form)
-        user_name = register_form.cleaned_data.get('userName')
-        password1 = register_form.cleaned_data.get('password1')
-        password2 = register_form.cleaned_data.get('password2')
-        telephone = register_form.cleaned_data.get('telephone')
+        user_name = register_form.data.get('user_name')
+        password1 = register_form.data.get('password1')
+        password2 = register_form.data.get('password2')
+        telephone = register_form.data.get('telephone')
 
         repeated_name = Student.objects.filter(user_name=user_name)
         if repeated_name.exists():
@@ -514,7 +514,7 @@ def merchant_register(request):
 
 class MerchantLoginForm(forms.Form):
     print(forms.Form)
-    userName = forms.CharField(label="账号", max_length=128, widget=forms.TextInput())
+    user_name = forms.CharField(label="账号", max_length=128, widget=forms.TextInput())
     password = forms.CharField(label="密码", max_length=128, widget=forms.PasswordInput())
 
 
@@ -522,11 +522,11 @@ class MerchantLoginForm(forms.Form):
 def merchant_login(request):
     if request.method == 'POST':
         login_form = MerchantLoginForm(request.POST)
-        # print(login_form)
+        print(login_form)
         print("尝试登录")
         if login_form.is_valid():
-            print(login_form.data.get("userName") + "尝试登录")
-            user_name = login_form.data.get("userName")
+            print(login_form.data.get("user_name") + "尝试登录")
+            user_name = login_form.data.get("user_name")
             password = login_form.data.get("password")
             try:
                 merchant = Merchant.objects.get(user_name=user_name)
