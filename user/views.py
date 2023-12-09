@@ -600,17 +600,18 @@ def get_type(request):
         paginator = Paginator(types, page_size)
 
         try:
-            current_page = list(paginator.page(page_num))
+            current_page = paginator.page(page_num)
         except EmptyPage:
             return JsonResponse({"error": 2002, "msg": "无效的页码"})
-
+        total = paginator.num_pages
         # 获取当前页的类型数据
-        current_types = current_page.object_list
+        current_types = list(current_page.object_list)
 
         # 在这里你可以进一步处理 current_types，如果需要的话
         return JsonResponse({"error": 0,
                              "data": {
-                                 "current_page": current_types
+                                 "current_page": current_types,
+                                 "total_page": total
                              }})
     else:
         return JsonResponse({"error": 2001, "msg": "请求方式错误"})
