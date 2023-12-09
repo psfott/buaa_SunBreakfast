@@ -1,8 +1,11 @@
+import json
+
 from django import forms
 from django.core.paginator import Paginator, EmptyPage
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from order.models import *
+from django.core.serializers import serialize
 
 import re
 import datetime
@@ -210,12 +213,24 @@ def order_complaint(request):
 @csrf_exempt
 def query_student_history(request):
     if request.method == "POST":
-        student_id = request.POST.get("student_id")
-        results = list(Order.objects.filter(user_id=student_id).order_by('-create_time').values())
+        user_id = request.POST.get("user_id")
+        page_num = request.POST.get("page_num")
+        page_size = request.POST.get("page_size")
+        orders = Order.objects.filter(user_id=student_id).order_by('-create_time').values()
+        paginator = Paginator(orders, page_size)
+
+        try:
+            current_page = paginator.page(page_num)
+        except EmptyPage:
+            return JsonResponse({"error": 2002, "msg": "无效的页码"})
+        total = orders.count()
+        current_orders = serialize('json', current_page.object_list)
+
         return JsonResponse({'error': 0,
                              'msg': '查看历史订单成功!',
                              'data': {
-                                 "results": results
+                                 "current_order": current_orders,
+                                 "total": total
                              }
                              })
     else:
@@ -226,12 +241,23 @@ def query_student_history(request):
 @csrf_exempt
 def query_student_cart(request):
     if request.method == "POST":
-        student_id = request.POST.get("student_id")
-        results = list(Cart.objects.filter(user_id=student_id).order_by('-add_time').values())
+        user_id = request.POST.get("user_id")
+        page_num = request.POST.get("page_num")
+        page_size = request.POST.get("page_size")
+        carts = Cart.objects.filter(user_id=user_id).order_by('-add_time')
+        paginator = Paginator(carts, page_size)
+        try:
+            current_page = paginator.page(page_num)
+        except EmptyPage:
+            return JsonResponse({"error": 2002, "msg": "无效的页码"})
+        total = carts.count()
+        current_carts = serialize('json', current_page.object_list)
+
         return JsonResponse({'error': 0,
                              'msg': '查看购物车成功!',
                              'data': {
-                                 "results": results
+                                 "current_carts": current_carts,
+                                 "total": total
                              }
                              })
     else:
@@ -453,11 +479,23 @@ def order_complete_rider(request):
 def query_rider_history(request):
     if request.method == "POST":
         rider_id = request.POST.get("rider_id")
-        results = list(Order.objects.filter(rider_id=rider_id).order_by('-create_time').values())
+        page_num = request.POST.get("page_num")
+        page_size = request.POST.get("page_size")
+        orders = Order.objects.filter(rider_id=rider_id).order_by('-create_time').values()
+        paginator = Paginator(orders, page_size)
+
+        try:
+            current_page = paginator.page(page_num)
+        except EmptyPage:
+            return JsonResponse({"error": 2002, "msg": "无效的页码"})
+        total = orders.count()
+        current_orders = serialize('json', current_page.object_list)
+
         return JsonResponse({'error': 0,
                              'msg': '查看骑手历史订单成功!',
                              'data': {
-                                 "results": results
+                                 "current_order": current_orders,
+                                 "total": total
                              }
                              })
     else:
@@ -596,18 +634,25 @@ def get_type(request):
         merchant_id = request.POST.get("merchant_id")
         page_num = request.POST.get("page_num")
         page_size = request.POST.get("page_size")
-        types = Type.objects.filter(merchant_id=merchant_id).order_by("id")
+        # print(merchant_id)
+        types = Type.objects.filter(merchant_id=merchant_id)
         paginator = Paginator(types, page_size)
 
         try:
             current_page = paginator.page(page_num)
         except EmptyPage:
             return JsonResponse({"error": 2002, "msg": "无效的页码"})
-        total = paginator.num_pages
+        total = types.count()
         # 获取当前页的类型数据
-        current_types = list(current_page.object_list)
-
-        # 在这里你可以进一步处理 current_types，如果需要的话
+        # current_types = serialize('json', current_page.object_list)
+        current_types_json = serialize('json', current_page.object_list)
+        current_types = json.loads(current_types_json)
+        # print(current_types)
+        for item in current_types:
+            type_id = int(item['pk'])
+            # 假设 Type 对象的主键是 'pk'
+            food_count = Food.objects.filter(type_id=type_id).count()
+            item['fields']['food_count'] = food_count
         return JsonResponse({"error": 0,
                              "data": {
                                  "current_page": current_types,
@@ -629,6 +674,7 @@ def add_type(request):
         else:
             new_type = Type()
             new_type.name = name
+            new_type.merchant_id = merchant_id
             new_type.save()
             return JsonResponse({"error": 0, "msg": "商家添加标签成功"})
     else:
@@ -685,11 +731,23 @@ def change_food(request):
 def query_merchant_history(request):
     if request.method == "POST":
         merchant_id = request.POST.get("merchant_id")
-        results = list(Order.objects.filter(merchant_id=merchant_id).order_by('-create_time').values())
+        page_num = request.POST.get("page_num")
+        page_size = request.POST.get("page_size")
+        orders = Order.objects.filter(merchant_id=merchant_id).order_by('-create_time').values()
+        paginator = Paginator(orders, page_size)
+
+        try:
+            current_page = paginator.page(page_num)
+        except EmptyPage:
+            return JsonResponse({"error": 2002, "msg": "无效的页码"})
+        total = orders.count()
+        current_orders = serialize('json', current_page.object_list)
+
         return JsonResponse({'error': 0,
                              'msg': '查看商家历史订单成功!',
                              'data': {
-                                 "results": results
+                                 "current_order": current_orders,
+                                 "total": total
                              }
                              })
     else:
@@ -703,6 +761,9 @@ def query_merchant_history(request):
 def query_food_comments(request):
     if request.method == "POST":
         food_id = request.POST.get("food_id")
+        page_num = request.POST.get("page_num")
+        page_size = request.POST.get("page_size")
+
         order_foods = order_food.objects.filter(food_id=food_id).order_by('-create_time')
 
         comments = []
@@ -711,10 +772,21 @@ def query_food_comments(request):
             if comment.exists() and comment not in comments:
                 comments.append(comment)
 
+        paginator = Paginator(comments, page_size)
+
+        try:
+            current_page = paginator.page(page_num)
+        except EmptyPage:
+            return JsonResponse({"error": 2002, "msg": "无效的页码"})
+        total = len(comments)
+
+        current_comments = serialize('json', current_page)
+
         return JsonResponse({'error': 0,
                              'msg': '查看菜品历史评价成功!',
                              'data': {
-                                 "results": comments
+                                 "current_comments": current_comments,
+                                 "total": total
                              }
                              })
     else:
