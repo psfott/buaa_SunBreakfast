@@ -600,7 +600,7 @@ def get_type(request):
         paginator = Paginator(types, page_size)
 
         try:
-            current_page = paginator.page(page_num)
+            current_page = list(paginator.page(page_num))
         except EmptyPage:
             return JsonResponse({"error": 2002, "msg": "无效的页码"})
 
