@@ -596,7 +596,7 @@ def get_type(request):
         merchant_id = request.POST.get("merchant_id")
         page_num = request.POST.get("page_num")
         page_size = request.POST.get("page_size")
-        types = Type.objects.filter(merchant_id=merchant_id)
+        types = Type.objects.filter(merchant_id=merchant_id).order_by("id")
         paginator = Paginator(types, page_size)
 
         try:
