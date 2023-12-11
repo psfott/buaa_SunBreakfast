@@ -1,6 +1,14 @@
 <template>
   <div class="login-body">
     <div class="login-container">
+      <div class="return">
+      <router-link to="/">
+        <el-icon class="back-to-home" style="color: black;">
+          <ArrowLeft/>
+        </el-icon>
+<!--        <span class="back-to-home-text">返回首页</span>-->
+      </router-link>
+      </div>
       <div class="head">
         <img class="logo" src="/logo.png" alt=""/>
         <div class="name">
@@ -116,4 +124,24 @@ const submitForm = () => {
   width: 70%;
   margin: 0 auto;
 }
+.return {
+  margin-top: 20px; /* 调整返回按钮与上方内容的间距 */
+}
+
+.router-link {
+  text-decoration: none; /* 移除链接的下划线效果 */
+  color: black; /* 设置链接文本颜色 */
+  display: flex;
+  align-items: center;
+}
+
+.back-to-home {
+  margin-left: 10px;
+  margin-right: 5px; /* 调整图标与文本之间的间距 */
+}
+
+.back-to-home-text {
+  font-size: 16px; /* 设置文本字体大小 */
+}
+
 </style>

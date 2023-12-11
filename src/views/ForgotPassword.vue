@@ -22,7 +22,7 @@
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="resetPassword">重置密码</el-button>
-          <router-link to="/login">
+          <router-link to="/">
             <el-button>返回登录</el-button>
           </router-link>
         </el-form-item>

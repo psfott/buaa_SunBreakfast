@@ -25,7 +25,7 @@
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="submitForm">注册</el-button>
-            <router-link to="/login">
+            <router-link to="/userLogin">
               <el-button >返回登录</el-button>
             </router-link>
         </el-form-item>

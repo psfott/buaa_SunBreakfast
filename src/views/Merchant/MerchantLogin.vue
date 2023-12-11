@@ -1,44 +1,52 @@
 <template>
   <div class="login-body">
     <div class="login-container">
-      <div class="head">
-        <img class="logo" src="/logo.png" alt=""/>
-        <div class="name">
-          <div class="title">北航阳光早餐系统</div>
-        </div>
-      </div>
-      <el-form label-position="top" :rules="rules" :model="ruleForm" ref="loginForm" class="login-form">
-        <el-form-item label="账号" prop="user_name">
-          <el-input type="text" v-model.trim="ruleForm.user_name" autocomplete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="密码" prop="password">
-          <el-input type="password" v-model.trim="ruleForm.password" autocomplete="off"></el-input>
-        </el-form-item>
-        <el-form-item>
-          <div style="color: #333">登录表示您已同意<a>《服务条款》</a></div>
-          <el-button style="width: 100%" type="primary" @click="submitForm">立即登录</el-button>
-<!--          <el-checkbox v-model="checked" @change="!checked">下次自动登录</el-checkbox>-->
-        </el-form-item>
-        <el-row style="text-align: center;margin-top:-10px">
-          <router-link to="/forgot-password">
-            <el-link type="primary">忘记密码</el-link>
-          </router-link>
-        </el-row>
-        <el-row style="text-align: center;margin-top:10px">
-          <router-link to="/merchantRegister">
-            <el-link type="primary">用户注册</el-link>
-          </router-link>
-        </el-row>
-      </el-form>
+      <div class="return">
+      <router-link to="/">
+        <el-icon class="back-to-home" style="color: black;">
+          <ArrowLeft/>
+        </el-icon>
+        <!--        <span class="back-to-home-text">返回首页</span>-->
+      </router-link>
     </div>
+    <div class="head">
+      <img class="logo" src="/logo.png" alt=""/>
+      <div class="name">
+        <div class="title">北航阳光早餐系统</div>
+      </div>
+    </div>
+    <el-form label-position="top" :rules="rules" :model="ruleForm" ref="loginForm" class="login-form">
+      <el-form-item label="账号" prop="user_name">
+        <el-input type="text" v-model.trim="ruleForm.user_name" autocomplete="off"></el-input>
+      </el-form-item>
+      <el-form-item label="密码" prop="password">
+        <el-input type="password" v-model.trim="ruleForm.password" autocomplete="off"></el-input>
+      </el-form-item>
+      <el-form-item>
+        <div style="color: #333">登录表示您已同意<a>《服务条款》</a></div>
+        <el-button style="width: 100%" type="primary" @click="submitForm">立即登录</el-button>
+        <!--          <el-checkbox v-model="checked" @change="!checked">下次自动登录</el-checkbox>-->
+      </el-form-item>
+      <el-row style="text-align: center;margin-top:-10px">
+        <router-link to="/forgot-password">
+          <el-link type="primary">忘记密码</el-link>
+        </router-link>
+      </el-row>
+      <el-row style="text-align: center;margin-top:10px">
+        <router-link to="/merchantRegister">
+          <el-link type="primary">用户注册</el-link>
+        </router-link>
+      </el-row>
+    </el-form>
+  </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import {ref} from 'vue'
 import {useRouter} from "vue-router"
 import httpInstance from '@/utils/axios'
-import { useMerchantStore } from '@/stores/merchantStore'
+import {useMerchantStore} from '@/stores/merchantStore'
 import {ElMessage} from "element-plus";
 
 const merchantStore = useMerchantStore()
@@ -49,25 +57,25 @@ const ruleForm = ref({
 
 const rules = {
   user_name: [
-    { required: true, message: '用户名不能为空', trigger: 'blur' }
+    {required: true, message: '用户名不能为空', trigger: 'blur'}
   ],
   password: [
-    { required: true, message: '密码不能为空', trigger: 'blur' },
-    { min: 6, max: 14, message: '密码长度为6-14个字符', trigger: 'blur' },
+    {required: true, message: '密码不能为空', trigger: 'blur'},
+    {min: 6, max: 14, message: '密码长度为6-14个字符', trigger: 'blur'},
   ]
 }
 
 const loginForm = ref(null)
 const router = useRouter()
 const submitForm = () => {
-  const { user_name, password } = ruleForm.value
-    httpInstance.post('/Merchant/login',ruleForm.value).then(res => {
-      console.log(res.data)
-      merchantStore.merchantInfo = res.data
-      console.log(merchantStore.merchantInfo)
-      ElMessage({ type: 'success', message: '登录成功' })
-      router.replace({ path: '/merchant' })
-    })
+  const {user_name, password} = ruleForm.value
+  httpInstance.post('/Merchant/login', ruleForm.value).then(res => {
+    console.log(res.data)
+    merchantStore.merchantInfo = res.data
+    console.log(merchantStore.merchantInfo)
+    ElMessage({type: 'success', message: '登录成功'})
+    router.replace({path: '/merchant'})
+  })
 }
 </script>
 
@@ -86,6 +94,7 @@ const submitForm = () => {
   background-position: center;
   background-size: 100%;
 }
+
 .login-container {
   width: 420px;
   height: 500px;
@@ -93,28 +102,42 @@ const submitForm = () => {
   border-radius: 4px;
   box-shadow: 0px 21px 41px 0px rgba(0, 0, 0, 0.2);
 }
+
 .head {
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 40px 0 20px 0;
 }
+
 .head img {
   width: 100px;
   height: 100px;
   margin-right: 20px;
 }
+
 .head .title {
   font-size: 28px;
   color: #1BAEAE;
   font-weight: bold;
 }
+
 .head .tips {
   font-size: 12px;
   color: #999;
 }
+
 .login-form {
   width: 70%;
   margin: 0 auto;
+}
+
+.return {
+  margin-top: 20px; /* 调整返回按钮与上方内容的间距 */
+}
+
+.back-to-home {
+  margin-left: 10px;
+  margin-right: 5px; /* 调整图标与文本之间的间距 */
 }
 </style>
