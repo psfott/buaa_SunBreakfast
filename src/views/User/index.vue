@@ -11,7 +11,7 @@
       <div class="user-info">
         <img class="avatar" src="@/assets/images/user_avatar.jpg" alt="用户头像">
         <div class="user-details">
-          <span class="user-id">欢迎，psfott</span>
+          <span class="user-id">欢迎, {{profileForm.name}}</span>
         </div>
         <router-link to="/" class="logout-link">
           <el-button type="text" @click="logout">退出登录</el-button>
@@ -69,6 +69,8 @@
 import {CircleCheck, House, Odometer, Plus, Search, User} from "@element-plus/icons-vue";
 import router from "@/router"
 import {reactive} from "vue";
+import {useUserStore} from "@/stores/userStore";
+const userStore = useUserStore()
 
 const state = reactive( {
   showMenu : true,
@@ -76,6 +78,9 @@ const state = reactive( {
   currenPath:'/user',
 })
 
+const profileForm = {
+  name:userStore.userInfo.user_name
+}
 </script>
 
 <style scoped>

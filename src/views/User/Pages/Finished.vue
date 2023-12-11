@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <el-card class="order-card" shadow="hover">
     <h1 class="page-title">已完成的订单</h1>
 
     <table class="order-table">
@@ -12,7 +12,7 @@
       </tr>
       </thead>
       <tbody>
-      <tr v-for="(order, index) in finishedOrders" :key="index">
+      <tr v-for="(order, index) in displayedOrders" :key="index">
         <td>{{ order.merchantName }}</td>
         <td>{{ order.deliveryPersonId }}</td>
         <td>{{ order.deliveryTime }}</td>
@@ -45,11 +45,19 @@
       </tr>
       </tbody>
     </table>
-  </div>
+
+    <el-pagination
+        @current-change="handleCurrentChange"
+        :current-page="currentPage"
+        :page-sizes="[10, 20, 30, 40]"
+        :page-size="pageSize"
+        :total="finishedOrders.length"
+    />
+  </el-card>
 </template>
 
 <script>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 
 export default {
   setup() {
@@ -72,6 +80,15 @@ export default {
       // Add more finished orders as needed
     ]);
 
+    const currentPage = ref(1);
+    const pageSize = ref(10);
+
+    const displayedOrders = computed(() => {
+      const startIndex = (currentPage.value - 1) * pageSize.value;
+      const endIndex = startIndex + pageSize.value;
+      return finishedOrders.value.slice(startIndex, endIndex);
+    });
+
     const openReviewDialog = (index) => {
       form.merchantRating = null;
       form.riderRating = null;
@@ -92,6 +109,10 @@ export default {
       // You can update the finishedOrders or perform any other necessary actions
     };
 
+    const handleCurrentChange = (newPage) => {
+      currentPage.value = newPage;
+    };
+
     return {
       finishedOrders,
       dialogFormVisible,
@@ -100,6 +121,10 @@ export default {
       formLabelWidth,
       openReviewDialog,
       submitReview,
+      currentPage,
+      pageSize,
+      displayedOrders,
+      handleCurrentChange,
     };
   },
 };
@@ -132,5 +157,9 @@ th {
   width: 100%;
   height: 100px;
   margin-bottom: 10px;
+}
+.order-card {
+  border-radius: 8px;
+  margin: 20px 0;
 }
 </style>

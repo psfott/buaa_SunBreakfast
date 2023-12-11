@@ -63,8 +63,8 @@ def student_register(request):
         return JsonResponse({'error': 0,
                              'msg': '注册成功!',
                              'data': {
-                                 'userid': new_student.id,
-                                 'username': new_student.user_name,
+                                 'user_id': new_student.id,
+                                 'user_name': new_student.user_name,
                                  'authorization': token,
                                  'telephone': new_student.telephone,
                                  'student_id': new_student.student_id
@@ -102,8 +102,8 @@ def student_login(request):
                 'error': 0,
                 'msg': "登录成功!",
                 'data': {
-                    'userid': student.id,
-                    'username': student.user_name,
+                    'user_id': student.id,
+                    'user_name': student.user_name,
                     'authorization': token,
                     'student_id': student.student_id,
                     'telephone': student.telephone
@@ -122,15 +122,25 @@ def order_add(request):
     if request.method == "POST":
         user_id = request.POST.get("userid")
         merchant_id = request.POST.get("merchant_id")
-        food_id = request.POST.get("food_id")
+        food_id_list = request.POST.getlist("food_id")
+        cnt_list = request.POST.getlist("cnt")
+        if len(food_id_list) != len(cnt_list):
+            return JsonResponse({"error": 2002, "msg": "food_id和cnt数量不一致"})
 
         new_order = Order()
         new_order.merchant_id = merchant_id
         new_order.user_id = user_id
-        new_order.food_id = food_id
         new_order.create_time = datetime.datetime.now()
         new_order.status = 0
         new_order.save()
+
+        for food_id, cnt in zip(food_id_list, cnt_list):
+            new_order_food = order_food()
+            new_order_food.order_id = new_order.id
+            new_order_food.food_id = food_id
+            new_order_food.cnt = cnt
+            new_order_food.save()
+
         return JsonResponse({"error": 0, "msg": "下单成功"})
     else:
         return JsonResponse({"error": 2001, "msg": "请求方式错误"})
@@ -362,6 +372,38 @@ class RiderRegisterForm(forms.Form):
     password1 = forms.CharField(label="密码", max_length=128, widget=forms.PasswordInput())
     password2 = forms.CharField(label="确认密码", max_length=128, widget=forms.PasswordInput())
     telephone = forms.CharField(label="联系电话", max_length=128, widget=forms.TextInput())
+
+def get_merchants(request):
+    if request.method == "POST":
+        page_num = request.POST.get("page_num")
+        page_size = request.POST.get("page_size")
+
+        merchants = Merchant.objects.filter().order_by('id')
+        paginator = Paginator(merchants, page_size)
+
+        try:
+            current_page = paginator.page(page_num)
+        except EmptyPage:
+            return JsonResponse({"error": 2002, "msg": "无效的页码"})
+        total = merchants.count()
+        # 获取当前页的类型数据
+        current_foods_json = serialize('json', current_page.object_list)
+        current_foods = json.loads(current_foods_json)
+        # print(current_types)
+        # for item in current_foods:
+        #     food_id = int(item['pk'])
+        #     # 假设 Type 对象的主键是 'pk'
+        #     # order_count = Order.objects.filter(food_id=food_id).count()
+        #     order_count = order_food.objects.filter(food_id=food_id).count()
+        #     item['fields']['order_count'] = order_count
+        #     item['fields']['id'] = food_id
+        return JsonResponse({"error": 0,
+                             "data": {
+                                 "current_page": current_foods,
+                                 "total_page": total
+                             }})
+    else:
+        return JsonResponse({"error": 2001, "msg": "请求方式错误"})
 
 
 @csrf_exempt
@@ -609,6 +651,43 @@ def order_get_merchant(request):
         return JsonResponse({"error": 2001, "msg": "请求方式错误"})
 
 
+# 商家获取餐品列表
+@csrf_exempt
+def get_foods(request):
+    if request.method == "POST":
+        merchant_id = request.POST.get("merchant_id")
+        page_num = request.POST.get("page_num")
+        page_size = request.POST.get("page_size")
+        # print(merchant_id)
+        foods = Food.objects.filter(merchant_id=merchant_id).order_by('id')
+        paginator = Paginator(foods, page_size)
+
+        try:
+            current_page = paginator.page(page_num)
+        except EmptyPage:
+            return JsonResponse({"error": 2002, "msg": "无效的页码"})
+        total = foods.count()
+        # 获取当前页的类型数据
+        # current_types = serialize('json', current_page.object_list)
+        current_foods_json = serialize('json', current_page.object_list)
+        current_foods = json.loads(current_foods_json)
+        # print(current_types)
+        for item in current_foods:
+            food_id = int(item['pk'])
+            # 假设 Type 对象的主键是 'pk'
+            # order_count = Order.objects.filter(food_id=food_id).count()
+            order_count = order_food.objects.filter(food_id=food_id).count()
+            item['fields']['order_count'] = order_count
+            item['fields']['id'] = food_id
+        return JsonResponse({"error": 0,
+                             "data": {
+                                 "current_page": current_foods,
+                                 "total_page": total
+                             }})
+    else:
+        return JsonResponse({"error": 2001, "msg": "请求方式错误"})
+
+
 # 商家添加菜品
 @csrf_exempt
 def add_food(request):
@@ -617,7 +696,8 @@ def add_food(request):
         name = request.POST.get("name")
         price = request.POST.get("price")
         type_id = request.POST.get("type_id")
-        status  = request.POST.get("status")
+        status = request.POST.get("status")
+
         if 'image' in request.FILES:
             image = request.FILES['image']
         else:
@@ -653,7 +733,7 @@ def get_type(request):
         page_num = request.POST.get("page_num")
         page_size = request.POST.get("page_size")
         # print(merchant_id)
-        types = Type.objects.filter(merchant_id=merchant_id)
+        types = Type.objects.filter(merchant_id=merchant_id).order_by('id')
         paginator = Paginator(types, page_size)
 
         try:
@@ -671,6 +751,7 @@ def get_type(request):
             # 假设 Type 对象的主键是 'pk'
             food_count = Food.objects.filter(type_id=type_id).count()
             item['fields']['food_count'] = food_count
+            item['fields']['type_id'] = type_id
         return JsonResponse({"error": 0,
                              "data": {
                                  "current_page": current_types,

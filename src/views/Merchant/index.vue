@@ -1,7 +1,7 @@
 <template>
   <div class="merchant—layout">
-<!--    <el-container v-if="state.showMenu" class="container">-->
-    <el-container class="container">
+    <el-container v-if="state.showMenu" class="container">
+<!--    <el-container class="container">-->
       <el-aside class="aside">
         <div class="head">
           <div>
@@ -65,8 +65,8 @@
 <!--        <Footer />-->
       </el-container>
     </el-container>
-<!--    <el-container v-else class="container">-->
-    <el-container class="container">
+    <el-container v-else class="container">
+<!--    <el-container class="container">-->
       <router-view />
     </el-container>
   </div>

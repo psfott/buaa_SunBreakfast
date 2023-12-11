@@ -34,22 +34,19 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import {useUserStore} from "@/stores/userStore";
+const userStore = useUserStore()
 import Avatar from '../../../assets/images/user_avatar.jpg'
-export default {
-  data() {
-    return {
-      userProfile: {
-        img: Avatar,
-        name: "Psfott",
-        studentId: "21371158",
-        address: "大运村5号楼, 0410C",
-        phoneNumber: "15526664444",
-        // Add more user details as needed
-      },
-    };
-  },
-};
+
+const userProfile= {
+      img: Avatar,
+      name: userStore.userInfo.user_name,
+      studentId: userStore.userInfo.student_id,
+      address: '',
+      phoneNumber: userStore.userInfo.telephone
+}
+
 </script>
 
 <style scoped>

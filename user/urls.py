@@ -16,6 +16,7 @@ urlpatterns = [
     path('student/change_cart', change_cart_cnt),
     path('student/identity', query_student_identity),
     path('student/identity_change', change_student_identity),
+    path('student/get_merchants', get_merchants),
     # Rider
     path('Rider/register', rider_register),
     path('Rider/login', rider_login),
@@ -27,6 +28,7 @@ urlpatterns = [
     path('Merchant/login', merchant_login),
     path('Merchant/order_get', order_get_merchant),
     path('Merchant/add_food', add_food),
+    path('Merchant/get_foods', get_foods),
     path('Merchant/change_food', change_food),
     path('Merchant/get_types', get_type),
     path('Merchant/add_type', add_type),
