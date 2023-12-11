@@ -1,5 +1,6 @@
 <template>
   <div class="user-layout">
+    <el-container class="beauty">
     <!-- 顶部搜索栏 -->
     <el-header class="header">
       <div class="logo">
@@ -62,6 +63,7 @@
         <router-view></router-view>
       </el-main>
     </el-container>
+    </el-container>
   </div>
 </template>
 
@@ -85,6 +87,10 @@ const profileForm = {
 
 <style scoped>
 .user-layout {
+  height: auto;
+}
+.beauty{
+  background-color: #f8f8f8;
   height: 100vh;
 }
 
