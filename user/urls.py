@@ -27,6 +27,7 @@ urlpatterns = [
     path('Merchant/login', merchant_login),
     path('Merchant/order_get', order_get_merchant),
     path('Merchant/add_food', add_food),
+    path('Merchant/get_foods', get_foods),
     path('Merchant/change_food', change_food),
     path('Merchant/get_types', get_type),
     path('Merchant/add_type', add_type),
