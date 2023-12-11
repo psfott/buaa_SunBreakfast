@@ -228,7 +228,7 @@ def query_student_history(request):
         user_id = request.POST.get("user_id")
         page_num = request.POST.get("page_num")
         page_size = request.POST.get("page_size")
-        orders = Order.objects.filter(user_id=student_id).order_by('-create_time').values()
+        orders = Order.objects.filter(user_id=user_id).order_by('-create_time').values()
         paginator = Paginator(orders, page_size)
 
         try:
@@ -362,6 +362,59 @@ def change_student_identity(request):
         student.image = request.POST.get("image")
         student.save()
         return JsonResponse({'error': 0, 'msg': '修改个人信息成功!'})
+    else:
+        return JsonResponse({"error": 2001, "msg": "请求方式错误"})
+
+
+# 获取商家选项
+def get_merchants(request):
+    if request.method == "POST":
+        page_num = request.POST.get("page_num")
+        page_size = request.POST.get("page_size")
+
+        merchants = Merchant.objects.filter().order_by('id')
+        paginator = Paginator(merchants, page_size)
+
+        try:
+            current_page = paginator.page(page_num)
+        except EmptyPage:
+            return JsonResponse({"error": 2002, "msg": "无效的页码"})
+        total = merchants.count()
+        # 获取当前页的类型数据
+        current_merchants_json = serialize('json', current_page.object_list)
+        current_merchants = json.loads(current_merchants_json)
+        # print(current_types)
+        # for item in current_foods:
+        #     food_id = int(item['pk'])
+        #     # 假设 Type 对象的主键是 'pk'
+        #     # order_count = Order.objects.filter(food_id=food_id).count()
+        #     order_count = order_food.objects.filter(food_id=food_id).count()
+        #     item['fields']['order_count'] = order_count
+        #     item['fields']['id'] = food_id
+        return JsonResponse({"error": 0,
+                             "data": {
+                                 "current_page": current_merchants,
+                                 "total_page": total
+                             }})
+    else:
+        return JsonResponse({"error": 2001, "msg": "请求方式错误"})
+
+
+def get_all_merchants(request):
+    if request.method == "POST":
+        merchants = Merchant.objects.filter().order_by('id')
+        for item in merchants:
+            merchant_id = int(item['pk'])
+            order_count = order_food.objects.filter(merchant_id=merchant_id).count()
+            item['fields']['order_count'] = order_count
+            item['fields']['id'] = merchant_id
+        merchants = merchants.order_by('order_count')
+        total = merchants.count()
+        return JsonResponse({"error": 0,
+                             "data": {
+                                 "merchants": merchants,
+                                 "total": total
+                             }})
     else:
         return JsonResponse({"error": 2001, "msg": "请求方式错误"})
 
@@ -643,7 +696,7 @@ def get_foods(request):
         for item in current_foods:
             food_id = int(item['pk'])
             # 假设 Type 对象的主键是 'pk'
-            order_count = Order.objects.filter(food_id=food_id).count()
+            order_count = order_food.objects.filter(food_id=food_id).count()
             item['fields']['order_count'] = order_count
         return JsonResponse({"error": 0,
                              "data": {
