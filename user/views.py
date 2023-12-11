@@ -617,7 +617,7 @@ def add_food(request):
         name = request.POST.get("name")
         price = request.POST.get("price")
         type_id = request.POST.get("type_id")
-
+        status  = request.POST.get("status")
         if 'image' in request.FILES:
             image = request.FILES['image']
         else:
@@ -632,7 +632,7 @@ def add_food(request):
             new_food.name = name
             new_food.price = price
             new_food.type_id = type_id
-            new_food.status = True
+            new_food.status = status
 
             if image:
                 # Save the file to the media root
