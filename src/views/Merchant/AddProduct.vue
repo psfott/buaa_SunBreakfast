@@ -8,40 +8,40 @@
         <el-form-item label="菜品名称" prop="goodsName">
           <el-input style="width: 300px" v-model="state.goodForm.goodsName" placeholder="请输入菜品名称"></el-input>
         </el-form-item>
-        <el-form-item label="菜品简介" prop="goodsIntro">
-          <el-input style="width: 300px" type="textarea" v-model="state.goodForm.goodsIntro" placeholder="请输入菜品简介(100字)"></el-input>
-        </el-form-item>
+<!--        <el-form-item label="菜品简介" prop="goodsIntro">-->
+<!--          <el-input style="width: 300px" type="textarea" v-model="state.goodForm.goodsIntro" placeholder="请输入菜品简介(100字)"></el-input>-->
+<!--        </el-form-item>-->
         <el-form-item label="菜品价格" prop="originalPrice">
           <el-input type="number" min="0" style="width: 300px" v-model="state.goodForm.originalPrice" placeholder="请输入菜品价格"></el-input>
         </el-form-item>
-        <el-form-item label="菜品售卖价" prop="sellingPrice">
-          <el-input type="number" min="0" style="width: 300px" v-model="state.goodForm.sellingPrice" placeholder="请输入菜品售价"></el-input>
-        </el-form-item>
-        <el-form-item label="菜品标签" prop="tag">
-          <el-input style="width: 300px" v-model="state.goodForm.tag" placeholder="请输入菜品小标签"></el-input>
-        </el-form-item>
-        <el-form-item label="上架状态" prop="goodsSellStatus">
-          <el-radio-group v-model="state.goodForm.goodsSellStatus">
-            <el-radio label="0">上架</el-radio>
-            <el-radio label="1">下架</el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item required label="菜品主图" prop="goodsCoverImg">
-          <el-upload
-              class="avatar-uploader"
-              :action="state.uploadImgServer"
-              accept="jpg,jpeg,png"
-              :headers="{
-              token: state.token
-            }"
-              :show-file-list="false"
-              :before-upload="handleBeforeUpload"
-              :on-success="handleUrlSuccess"
-          >
-            <img style="width: 100px; height: 100px; border: 1px solid #e9e9e9;" v-if="state.goodForm.goodsCoverImg" :src="state.goodForm.goodsCoverImg" class="avatar">
-            <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
-          </el-upload>
-        </el-form-item>
+<!--        <el-form-item label="菜品售卖价" prop="sellingPrice">-->
+<!--          <el-input type="number" min="0" style="width: 300px" v-model="state.goodForm.sellingPrice" placeholder="请输入菜品售价"></el-input>-->
+<!--        </el-form-item>-->
+<!--        <el-form-item label="菜品标签" prop="tag">-->
+<!--          <el-input style="width: 300px" v-model="state.goodForm.tag" placeholder="请输入菜品小标签"></el-input>-->
+<!--        </el-form-item>-->
+<!--        <el-form-item label="上架状态" prop="goodsSellStatus">-->
+<!--          <el-radio-group v-model="state.goodForm.goodsSellStatus">-->
+<!--            <el-radio label="0">上架</el-radio>-->
+<!--            <el-radio label="1">下架</el-radio>-->
+<!--          </el-radio-group>-->
+<!--        </el-form-item>-->
+<!--        <el-form-item required label="菜品主图" prop="goodsCoverImg">-->
+<!--          <el-upload-->
+<!--              class="avatar-uploader"-->
+<!--              :action="state.uploadImgServer"-->
+<!--              accept="jpg,jpeg,png"-->
+<!--              :headers="{-->
+<!--              token: state.token-->
+<!--            }"-->
+<!--              :show-file-list="false"-->
+<!--              :before-upload="handleBeforeUpload"-->
+<!--              :on-success="handleUrlSuccess"-->
+<!--          >-->
+<!--            <img style="width: 100px; height: 100px; border: 1px solid #e9e9e9;" v-if="state.goodForm.goodsCoverImg" :src="state.goodForm.goodsCoverImg" class="avatar">-->
+<!--            <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>-->
+<!--          </el-upload>-->
+<!--        </el-form-item>-->
         <el-form-item label="详情内容">
           <div ref='editor'></div>
         </el-form-item>
@@ -56,11 +56,12 @@
 <script setup>
 import { reactive, ref, onMounted, onBeforeUnmount, getCurrentInstance } from 'vue'
 import WangEditor from 'wangeditor'
-// import axios from '@/utils/axios'
-import axios from 'axios'
+import httpInstance from '@/utils/axios'
 import { ElMessage } from 'element-plus'
 import { useRoute, useRouter } from 'vue-router'
-import { localGet, uploadImgServer, uploadImgsServer } from '@/utils'
+import { uploadImgServer, uploadImgsServer } from '@/utils'
+import {useMerchantStore} from "@/stores/merchantStore";
+const merchantStore = useMerchantStore()
 
 const { proxy } = getCurrentInstance()
 const editor = ref(null)
@@ -70,7 +71,6 @@ const router = useRouter()
 const { id } = route.query
 const state = reactive({
   uploadImgServer,
-  token: localGet('token') || '',
   id: id,
   defaultCate: '',
   goodForm: {
@@ -90,28 +90,26 @@ const state = reactive({
     originalPrice: [
       { required: 'true', message: '请填写菜品价格', trigger: ['change'] }
     ],
-    sellingPrice: [
-      { required: 'true', message: '请填写菜品售价', trigger: ['change'] }
-    ],
+    // sellingPrice: [
+    //   { required: 'true', message: '请填写菜品售价', trigger: ['change'] }
+    // ],
   },
   categoryId: '',
   category: {
     lazy: true,
     lazyLoad(node, resolve) {
       const { level = 0, value } = node
-      axios.get('/categories', {
-        params: {
-          pageNumber: 1,
-          pageSize: 1000,
-          categoryLevel: level + 1,
-          parentId: value || 0
-        }
+      httpInstance.post('Merchant/get_types', {
+          page_num: 1,
+          page_size: 1000,
+          merchant_id:merchantStore.merchantInfo.userid
       }).then(res => {
-        const list = res.list
+        const list = res.data.current_page.map(item => item.fields)
+        console.log(list)
         const nodes = list.map(item => ({
-          value: item.categoryId,
-          label: item.categoryName,
-          leaf: level > 1
+          value: item.type_id,
+          label: item.name,
+          leaf: level === 0
         }))
         resolve(nodes)
       })
@@ -142,6 +140,7 @@ onMounted(() => {
       }
     }
   }
+
   instance.config.uploadImgServer = uploadImgsServer
   Object.assign(instance.config, {
     onchange() {
@@ -176,34 +175,43 @@ onBeforeUnmount(() => {
   instance = null
 })
 const submitAdd = () => {
-  goodRef.value.validate((vaild) => {
-    if (vaild) {
       // 默认新增用 post 方法
-      let httpOption = axios.post
+      // let params = {
+      //   goodsCategoryId: state.categoryId,
+      //   goodsCoverImg: state.goodForm.goodsCoverImg,
+      //   goodsDetailContent: instance.txt.html(),
+      //   goodsIntro: state.goodForm.goodsIntro,
+      //   goodsName: state.goodForm.goodsName,
+      //   goodsSellStatus: state.goodForm.goodsSellStatus,
+      //   originalPrice: state.goodForm.originalPrice,
+      //   sellingPrice: state.goodForm.sellingPrice,
+      //   stockNum: state.goodForm.stockNum,
+      //   tag: state.goodForm.tag
+      // }
       let params = {
-        goodsCategoryId: state.categoryId,
-        goodsCoverImg: state.goodForm.goodsCoverImg,
-        goodsDetailContent: instance.txt.html(),
-        goodsIntro: state.goodForm.goodsIntro,
-        goodsName: state.goodForm.goodsName,
-        goodsSellStatus: state.goodForm.goodsSellStatus,
-        originalPrice: state.goodForm.originalPrice,
-        sellingPrice: state.goodForm.sellingPrice,
-        stockNum: state.goodForm.stockNum,
-        tag: state.goodForm.tag
+        type_id: state.categoryId,
+        // goodsCoverImg: state.goodForm.goodsCoverImg,
+        // goodsDetailContent: instance.txt.html(),
+        // goodsIntro: state.goodForm.goodsIntro,
+        name: state.goodForm.goodsName,
+        // goodsSellStatus: state.goodForm.goodsSellStatus,
+        price: state.goodForm.originalPrice,
+        // sellingPrice: state.goodForm.sellingPrice,
+        // stockNum: state.goodForm.stockNum,
+        // tag: state.goodForm.tag
+        merchant_id: merchantStore.merchantInfo.userid
       }
+
       console.log('params', params)
       if (id) {
         params.goodsId = id
         // 修改菜品使用 put 方法
-        httpOption = axios.put
+        // httpInstance.post
       }
-      httpOption('/goods', params).then(() => {
+      httpInstance.post('/Merchant/add_food', params).then(() => {
         ElMessage.success(id ? '修改成功' : '添加成功')
-        router.push({ path: '/good' })
+        router.push({ path: '/merchant/foods' })
       })
-    }
-  })
 }
 const handleBeforeUpload = (file) => {
   const sufix = file.name.split('.')[1] || ''

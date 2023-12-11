@@ -8,7 +8,7 @@ import { inject } from 'vue'
 export const useMerchantStore = defineStore('merchant', () => {
   // 1. 定义管理用户数据的state
   const merchantInfo = ref({
-      id: '',
+      userid: '',
       user_name: '',
       authorization:'',
       telephone: ''

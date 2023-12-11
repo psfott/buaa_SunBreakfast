@@ -28,19 +28,19 @@
       >
       </el-table-column>
       <el-table-column
-          prop="categoryName"
+          prop="type_id"
+          label="分类编号"
+          width="200"
+      >
+      </el-table-column>
+      <el-table-column
+          prop="name"
           label="分类名称"
       >
       </el-table-column>
       <el-table-column
-          prop="categoryRank"
-          label="分类编号"
-          width="120"
-      >
-      </el-table-column>
-      <el-table-column
-          prop="createTime"
-          label="添加时间"
+          prop="food_count"
+          label="分类菜品数"
           width="200"
       >
       </el-table-column>
@@ -49,12 +49,12 @@
           width="220"
       >
         <template #default="scope">
-          <a style="cursor: pointer; margin-right: 10px" @click="handleEdit(scope.row.categoryId)">修改</a>
+          <a style="cursor: pointer; margin-right: 10px" @click="handleEdit(scope.row.type_id,scope.row.name)">修改</a>
           <el-popconfirm
               title="确定删除吗？"
               confirmButtonText='确定'
               cancelButtonText='取消'
-              @confirm="handleDeleteOne(scope.row.categoryId)"
+              @confirm="handleDeleteOne(scope.row.type_id)"
           >
             <template #reference>
               <a style="cursor: pointer">删除</a>
@@ -83,6 +83,8 @@ import { ElMessage } from 'element-plus'
 import { Plus, Delete } from '@element-plus/icons-vue'
 import httpInstance from '@/utils/axios'
 import DialogAddCategory from '@/components/DialogAddCategory.vue'
+import { useMerchantStore } from '@/stores/merchantStore'
+const merchantStore = useMerchantStore()
 
 const addCate = ref(null)
 const router = useRouter() // 声明路由实例
@@ -97,34 +99,37 @@ const state = reactive({
   type: 'add', // 操作类型
   level: 1
 })
+
 onMounted(() => {
   getCategory()
 })
+
 watchEffect(() => {
   console.log(state.pageSize)
 })
 const unwatch = router.afterEach((to) => {
   // 每次路由变化的时候，都会触发监听时间，重新获取列表数据
-  if (['category', 'level2', 'level3'].includes(to.name)) {
+  if (['category'].includes(to.name)) {
     getCategory()
   }
 })
+
 onUnmounted(() => {
   unwatch()
 })
+
 // 获取分类列表
 const getCategory = () => {
   state.loading = true
-  httpInstance.get('/categories', {
-    params: {
-      pageNumber: state.currentPage,
-      pageSize: state.pageSize,
-      categoryLevel: level
-    }
+  httpInstance.post('/Merchant/get_types', {
+    merchant_id: merchantStore.merchantInfo.userid,
+    page_num: state.currentPage,
+    page_size: state.pageSize
   }).then(res => {
-    state.tableData = res.list
-    state.total = res.totalCount
-    state.currentPage = res.currPage
+    state.tableData = res.data.current_page.map(item => item.fields)
+    console.log(state.tableData)
+    state.total = res.data.total_page
+    // state.currentPage = s
     state.loading = false
   })
 }
@@ -135,9 +140,9 @@ const handleAdd = () => {
   addCate.value.open()
 }
 // 修改分类
-const handleEdit = (id) => {
+const handleEdit = (id,name) => {
   state.type = 'edit'
-  addCate.value.open(id)
+  addCate.value.open(id,name)
 }
 // 选择项
 const handleSelectionChange = (val) => {
@@ -149,7 +154,7 @@ const handleDelete = () => {
     ElMessage.error('请选择项')
     return
   }
-  axios.delete('/categories', {
+  httpInstance.post('/Merchant/delete_type', {
     data: {
       ids: state.multipleSelection.map(i => i.categoryId)
     }
@@ -160,11 +165,11 @@ const handleDelete = () => {
 }
 // 单个删除
 const handleDeleteOne = (id) => {
-  axios.delete('/categories', {
-    data: {
-      ids: [id]
-    }
-  }).then(() => {
+  // console.log(id)
+  httpInstance.post('/Merchant/delete_type', {
+      id: id
+  }
+    ).then(() => {
     ElMessage.success('删除成功')
     getCategory()
   })

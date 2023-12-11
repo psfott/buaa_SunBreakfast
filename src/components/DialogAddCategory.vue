@@ -1,11 +1,11 @@
 <template>
   <el-dialog
-    :title="state.type == 'add' ? '添加分类' : '修改分类'"
+    :title="props.type == 'add' ? '添加分类' : '修改分类'"
     v-model="state.visible"
     width="400px"
   >
     <el-form :model="state.ruleForm" :rules="state.rules" ref="formRef" label-width="100px" class="good-form">
-      <el-form-item label="商品名称" prop="name">
+      <el-form-item label="分类名称" prop="name">
         <el-input type="text" v-model="state.ruleForm.name"></el-input>
       </el-form-item>
 <!--      <el-form-item label="排序值" prop="rank">-->
@@ -28,6 +28,7 @@ import httpInstance from '@/utils/axios'
 import { ElMessage } from 'element-plus'
 
 import { useMerchantStore } from '@/stores/merchantStore'
+import table from "wangeditor/src/menus/table";
 const merchantStore = useMerchantStore()
 
 const props = defineProps({
@@ -42,40 +43,33 @@ const state = reactive({
   ruleForm: {
     name: '',
     merchant_id:''
-    // rank: ''
   },
   rules: {
     name: [
       { required: 'true', message: '名称不能为空', trigger: ['change'] }
     ]
-    // rank: [
-    //   { required: 'true', message: '编号不能为空', trigger: ['change'] }
-    // ]
   },
-  id: ''
+  item:{
+    name:'',
+    type_id:'',
+  }
 })
 // 获取详情
-const getDetail = (id) => {
-  http.get(`/categories/${id}`).then(res => {
+const getDetail = () => {
     state.ruleForm = {
-      name: res.categoryName
-      // rank: res.categoryRank
+      name: state.item.name
     }
-  })
 }
 // 开启弹窗
-const open = (id) => {
+const open = (id,name) => {
   state.visible = true
+  console.log(id)
   if (id) {
-    state.id = id
+    state.item.type_id = id
+    state.item.name = name
     // 如果是有 id 传入，证明是修改模式
-    getDetail(id)
-  } else {
-    // 否则为新增模式
-    // 新增类目，从路由获取分类 level 级别和父分类 id
-    state.ruleForm = {
-      name: '',
-    }
+    console.log(state.item)
+    getDetail()
   }
 }
 // 关闭弹窗
@@ -86,11 +80,11 @@ const submitForm = () => {
   formRef.value.validate((valid) => {
     if (valid) {
       if (props.type == 'add') {
-        this.ruleForm.merchant_id =
-        addTypeForm.value.name = this.ruleForm.name
-        addTypeForm.value.merchant_id = merchantStore.merchantInfo.id
         // 添加方法
-        httpInstance.post('api/add_type', this.ruleForm.value).then(() => {
+        httpInstance.post('Merchant/add_type', {
+          name: state.ruleForm.name,
+          merchant_id: merchantStore.merchantInfo.userid
+        }).then(() => {
           ElMessage.success('添加成功')
           state.visible = false
           // 接口回调之后，运行重新获取列表方法 reload
@@ -98,7 +92,7 @@ const submitForm = () => {
         })
       } else {
         // 修改方法
-        axios.put('/categories', {
+        httpInstance.put('/categories', {
           categoryId: state.id,
           categoryLevel: state.categoryLevel,
           parentId: state.categoryLevel,

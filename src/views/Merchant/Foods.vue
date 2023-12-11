@@ -78,8 +78,7 @@
 
 <script setup>
 import { onMounted, reactive, getCurrentInstance } from 'vue'
-// import axios from '@/utils/axios'
-import axios from 'axios'
+import httpInstance from '@/utils/axios'
 import { ElMessage } from 'element-plus'
 import { Plus, Delete } from '@element-plus/icons-vue'
 import { useRouter } from 'vue-router'
@@ -100,7 +99,7 @@ onMounted(() => {
 // 获取轮播图列表
 const getGoodList = () => {
   state.loading = true
-  axios.get('/goods/list', {
+  httpInstance.post('/merchant/get', {
     params: {
       pageNumber: state.currentPage,
       pageSize: state.pageSize
