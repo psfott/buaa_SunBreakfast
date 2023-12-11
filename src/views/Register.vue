@@ -14,6 +14,9 @@
         <el-form-item label="手机号" prop="phone">
           <el-input v-model="registerForm.phone" placeholder="请输入手机号"></el-input>
         </el-form-item>
+        <el-form-item label="学号" prop="studentId">
+          <el-input type="studentId" v-model="registerForm.studentId" placeholder="请输入学号"></el-input>
+        </el-form-item>
         <el-form-item label="密码" prop="password">
           <el-input type="password" v-model="registerForm.password" placeholder="请输入密码"></el-input>
         </el-form-item>
@@ -73,7 +76,8 @@ export default {
 }
 .register-container {
   width: 420px;
-  height: 500px;
+  height: auto;
+  margin-top: 0;
   background-color: #fff;
   border-radius: 4px;
   box-shadow: 0px 21px 41px 0px rgba(0, 0, 0, 0.2);
@@ -96,6 +100,7 @@ export default {
 }
 .register-form {
   width: 70%;
+  height: auto;
   margin: 0 auto;
 }
 </style>

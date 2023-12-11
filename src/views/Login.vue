@@ -7,6 +7,7 @@
           <div class="title">北航阳光早餐系统</div>
         </div>
       </div>
+      <div class="content">
       <el-form label-position="top" :rules="state.rules" :model="state.ruleForm" ref="loginForm" class="login-form">
         <el-form-item label="账号" prop="username">
           <el-input type="text" v-model.trim="state.ruleForm.username" autocomplete="off"></el-input>
@@ -30,6 +31,7 @@
           </router-link>
         </el-row>
       </el-form>
+      </div>
     </div>
   </div>
 </template>
@@ -121,10 +123,7 @@ export default {
   color: #1BAEAE;
   font-weight: bold;
 }
-.head .tips {
-  font-size: 12px;
-  color: #999;
-}
+
 .login-form {
   width: 70%;
   margin: 0 auto;

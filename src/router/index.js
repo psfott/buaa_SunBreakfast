@@ -6,8 +6,6 @@ import Login from '../views/Login.vue'
 import Register from "../views/Register.vue";
 import ForgotPassword from "../views/ForgotPassword.vue";
 import Merchant from "@/views/Merchant/index.vue";
-import User from "../views/User/index.vue"
-import Layout from "@/views/User/Pages/Layout.vue";
 import UserProfile from "../views/User/Pages/Profile.vue"
 import Main from "@/views/User/Pages/Main.vue";
 import Ongoing from "@/views/User/Pages/Ongoing.vue";
@@ -20,6 +18,7 @@ import MerchantFoodCategory from "@/views/Merchant/FoodCategory.vue";
 import MerchantAccount from "@/views/Merchant/MerchantAccount.vue";
 import MerchantOrder from "@/views/Merchant/MerchantOrder.vue";
 import MerchantOrderDetail from "@/views/Merchant/MerchantOrderDetail.vue";
+import user from "@/views/User/index.vue";
 
 const routes = [
     {
@@ -49,28 +48,15 @@ const routes = [
     },
     {
         path: '/user',
-        component: Layout, //使用布局组件
+        name: 'user',
+        component: user, //使用布局组件
+        redirect: '/user/main',
+        meta: {requiresAuth: true},
         children: [
-            {
-                path:'',
-                redirect:'/user/main'
-            },
-            {
-                path:'profile',
-                component: UserProfile
-            },
-            {
-                path:'main',
-                component: Main
-            },
-            {
-                path: 'ongoing',
-                component: Ongoing
-            },
-            {
-                path: 'finished',
-                component: Finished
-            }
+            {   path:'/user/profile', component: UserProfile, meta: { requiresAuth: true }  },
+            {   path:'/user/main', component: Main, meta: { requiresAuth: true }    },
+            {   path: '/user/ongoing', component: Ongoing, meta: { requiresAuth: true } },
+            {   path: '/user/finished', component: Finished, meta: { requiresAuth: true } }
         ]
     },
     {
