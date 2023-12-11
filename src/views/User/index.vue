@@ -1,66 +1,68 @@
 <template>
   <div class="user-layout">
-    <!-- 顶部搜索栏 -->
-    <el-header class="header">
-      <div class="logo">
-        <!-- 外卖系统Logo，你可以替换成实际的Logo -->
-        <img src="/logo.png" alt="logo">
-        <span>北航阳光早餐</span>
-      </div>
-
-      <div class="user-info">
-        <img class="avatar" src="@/assets/images/user_avatar.jpg" alt="用户头像">
-        <div class="user-details">
-          <span class="user-id">欢迎，psfott</span>
+    <el-container class="beauty">
+      <!-- 顶部搜索栏 -->
+      <el-header class="header">
+        <div class="logo">
+          <!-- 外卖系统Logo，你可以替换成实际的Logo -->
+          <img src="/logo.png" alt="logo">
+          <span>北航阳光早餐</span>
         </div>
-        <router-link to="/" class="logout-link">
-          <el-button type="text" >退出登录</el-button>
-        </router-link>
-      </div>
-    </el-header>
 
-    <!-- 主体内容区域 -->
-    <el-container class="container">
-      <!-- 侧边栏 -->
-      <el-aside width="200px" class="aside">
-        <!-- 根据需要设置的背景图片和模糊效果 -->
-        <div class="background-image"></div>
-        <div class="line" />
-        <el-menu
-            :default-openeds="state.defaultOpen"
-            :default-active='state.currentPath'
-            :router="true"
-            background-color="#35495e"
-            text-color="#fff"
-        >
-          <el-sub-menu index="1">
-            <template #title>
-              <span>首页</span>
-            </template>
-            <el-menu-item-group>
-              <el-menu-item index="/user/main"><el-icon><House /></el-icon>点外卖</el-menu-item>
-            </el-menu-item-group>
-          </el-sub-menu>
+        <div class="user-info">
+          <img class="avatar" src="@/assets/images/user_avatar.jpg" alt="用户头像">
+          <div class="user-details">
+            <span class="user-id">欢迎, {{profileForm.name}}</span>
+          </div>
+          <router-link to="/" class="logout-link">
+            <el-button type="text" @click="logout">退出登录</el-button>
+          </router-link>
+        </div>
+      </el-header>
 
-          <el-sub-menu index="2">
-            <template #title>
-              <span>我的订单</span>
-            </template>
-            <el-menu-item-group>
-              <el-menu-item index="/user/ongoing"><el-icon><Odometer /></el-icon>进行中</el-menu-item>
-              <el-menu-item index="/user/finished"><el-icon><CircleCheck /></el-icon>已完成</el-menu-item>
-            </el-menu-item-group>
-          </el-sub-menu>
+      <!-- 主体内容区域 -->
+      <el-container class="container">
+        <!-- 侧边栏 -->
+        <el-aside width="200px" class="aside">
+          <!-- 根据需要设置的背景图片和模糊效果 -->
+          <div class="background-image"></div>
+          <div class="line" />
+          <el-menu
+              :default-openeds="state.defaultOpen"
+              :default-active='state.currentPath'
+              :router="true"
+              background-color="#35495e"
+              text-color="#fff"
+          >
+            <el-sub-menu index="1">
+              <template #title>
+                <span>首页</span>
+              </template>
+              <el-menu-item-group>
+                <el-menu-item index="/user/main"><el-icon><House /></el-icon>外卖</el-menu-item>
+              </el-menu-item-group>
+            </el-sub-menu>
 
-          <el-menu-item index="/user/profile"><el-icon><User /></el-icon>个人中心</el-menu-item>
+            <el-sub-menu index="2">
+              <template #title>
+                <span>我的订单</span>
+              </template>
+              <el-menu-item-group>
+                <el-menu-item index="/user/ongoing"><el-icon><Odometer /></el-icon>进行中</el-menu-item>
+                <el-menu-item index="/user/finished"><el-icon><CircleCheck /></el-icon>已完成</el-menu-item>
+              </el-menu-item-group>
+            </el-sub-menu>
 
-        </el-menu>
-      </el-aside>
+            <el-menu-item index="/user/profile"><el-icon><User /></el-icon>个人中心</el-menu-item>
 
-      <!-- 主体内容区域，使用 <router-view> 渲染子路由 -->
-      <el-main>
-        <router-view></router-view>
-      </el-main>
+          </el-menu>
+        </el-aside>
+
+        <!-- 主体内容区域，使用 <router-view> 渲染子路由 -->
+        <el-main>
+          <router-view></router-view>
+        </el-main>
+      </el-container>
     </el-container>
   </div>
 </template>
@@ -69,6 +71,8 @@
 import {CircleCheck, House, Odometer, Plus, Search, User} from "@element-plus/icons-vue";
 import router from "@/router"
 import {reactive} from "vue";
+import {useUserStore} from "@/stores/userStore";
+const userStore = useUserStore()
 
 const state = reactive( {
   showMenu : true,
@@ -76,10 +80,17 @@ const state = reactive( {
   currenPath:'/user',
 })
 
+const profileForm = {
+  name:userStore.userInfo.user_name
+}
 </script>
 
 <style scoped>
 .user-layout {
+  height: auto;
+}
+.beauty{
+  background-color: #f8f8f8;
   height: 100vh;
 }
 

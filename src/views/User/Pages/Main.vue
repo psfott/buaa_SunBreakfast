@@ -10,173 +10,140 @@
       <el-button type="primary" @click="search">搜索</el-button>
     </div>
 
-    <div class="pageDown">
-      <div class="merchant-list-top">
-        <ul>
-          <li v-for="merchant in filteredMerchants" :key="merchant.id" class="merchant-item">
+    <el-row>
+      <el-col :span="4" v-for="merchant in state.filterMerchants" :key="merchant.id" :offset="1">
+        <div style="margin-top:15px">
+          <el-card :body-style="{ padding: '0px' }">
             <router-link :to="{ name: 'menu', params: { id: merchant.id } }">
-              <img :src="merchant.image"/>
+              <img :src="merchant.image" class="merchant-image"/>
               <div class="txt1"> {{ merchant.name }}</div>
               <div class="txt2"> {{ merchant.address }}</div>
               <div class="txt3">{{ merchant.rating }}</div>
             </router-link>
-          </li>
-        </ul>
-      </div>
+          </el-card>
+        </div>
+      </el-col>
+    </el-row>
+
+    <div class="block">
+      <el-pagination
+          @current-change="changePage"
+          :current-page="state.current_page"
+          :page-size="state.page_size"
+          layout="total, prev, pager, next"
+          :total="state.total">
+      </el-pagination>
     </div>
-
-    <el-pagination
-        :current-page="currentPage"
-        :page-size="pageSize"
-        :total="paginatedMerchants.length"
-        @current-change="handlePageChange"
-        style="margin-top: 20px"
-    />
-
   </el-card>
-
 </template>
 
-<script>
-export default {
-  data() {
-    return {
-      searchKeyword: "", // Search keyword
-      pageSize: 10, // Number of merchants per page
-      currentPage: 1, // Current page number
-      recommendedMerchants_top: [
-        {
-          id: 1,
-          name: "Merchant A",
-          image: "merchant_a.jpg", // Replace with actual image path
-          address: "123 Main St, City",
-          rating: 4.2,
-        },
-        {
-          id: 2,
-          name: "Merchant B",
-          image: "/merchant_b.jpg", // Replace with actual image path
-          address: "456 Oak St, Town",
-          rating: 4.8,
-        },
-        {
-          id: 3,
-          name: "Merchant C",
-          image: "/merchant_c.jpg", // Replace with actual image path
-          address: "789 Pine St, Village",
-          rating: 4.5,
-        },
-        {
-          id: 4,
-          name: "Merchant D",
-          image: "/merchant_d.jpg", // Replace with actual image path
-          address: "101 Elm St, Hamlet",
-          rating: 3.9,
-        },
-        {
-          id: 5,
-          name: "Merchant E",
-          image: "/merchant_e.jpg", // Replace with actual image path
-          address: "202 Maple St, Borough",
-          rating: 4.1,
-        },
-        {
-          id: 6,
-          name: "Merchant F",
-          image: "/merchant_f.jpg", // Replace with actual image path
-          address: "303 Birch St, District",
-          rating: 4.6,
-        },
-        {
-          id: 7,
-          name: "Merchant G",
-          image: "/merchant_g.jpg", // Replace with actual image path
-          address: "404 Cedar St, Township",
-          rating: 4.3,
-        },
-        {
-          id: 8,
-          name: "Merchant H",
-          image: "/merchant_h.jpg", // Replace with actual image path
-          address: "505 Walnut St, County",
-          rating: 4.7,
-        },
-        {
-          id: 9,
-          name: "Merchant I",
-          image: "/merchant_i.jpg", // Replace with actual image path
-          address: "606 Fir St, Municipality",
-          rating: 4.4,
-        },
-        {
-          id: 10,
-          name: "Merchant J",
-          image: "/merchant_j.jpg",
-          address: "503 Ps St, NewYork",
-          rating: 5.0,
-        }
-      ],
-      recommendedMerchants_down:[
-        {
-          id: 6,
-          name: "Merchant F",
-          image: "/merchant_f.jpg", // Replace with actual image path
-          address: "303 Birch St, District",
-          rating: 4.6,
-        },
-        {
-          id: 7,
-          name: "Merchant G",
-          image: "/merchant_g.jpg", // Replace with actual image path
-          address: "404 Cedar St, Township",
-          rating: 4.3,
-        },
-        {
-          id: 8,
-          name: "Merchant H",
-          image: "/merchant_h.jpg", // Replace with actual image path
-          address: "505 Walnut St, County",
-          rating: 4.7,
-        },
-        {
-          id: 9,
-          name: "Merchant I",
-          image: "/merchant_i.jpg", // Replace with actual image path
-          address: "606 Fir St, Municipality",
-          rating: 4.4,
-        },
-        {
-          id: 10,
-          name: "Merchant J",
-          image: "/merchant_j.jpg",
-          address: "503 Ps St, NewYork",
-          rating: 5.0,
-        }
-      ],
-      filteredMerchants: [],
-    };
+<script setup>
+import {ref,onMounted, reactive} from "vue"
+
+const searchKeyword = ref(""); // Search keyword
+const page_size = 8; // Number of merchants per page
+const current_page = ref(1); // Current page number
+
+const dataList = [
+  {
+    id: 1,
+    name: "Merchant A",
+    image: "merchant_a.jpg", // Replace with actual image path
+    address: "123 Main St, City",
+    rating: 4.2,
   },
-  created() {
-    this.search();
+  {
+    id: 2,
+    name: "Merchant B",
+    image: "/merchant_b.jpg", // Replace with actual image path
+    address: "456 Oak St, Town",
+    rating: 4.8,
   },
-  methods: {
-    search() {
-      // Handle search logic, e.g., navigate to search results page
-      const keyword = this.searchKeyword.toLowerCase();
-      this.filteredMerchants = [
-        ...this.recommendedMerchants_top,
-        ...this.recommendedMerchants_down,
-      ].filter(merchant => merchant.name.toLowerCase().includes(keyword));
-      console.log("Search Keyword:", this.searchKeyword);
-    },handlePageChange(newPage) {
-      this.currentPage = newPage;
-    },paginatedMerchants() {
-      const startIndex = (this.currentPage - 1) * this.pageSize;
-      const endIndex = startIndex + this.pageSize;
-      return this.filteredMerchants.slice(startIndex, endIndex);
-    },
+  {
+    id: 3,
+    name: "Merchant C",
+    image: "/merchant_c.jpg", // Replace with actual image path
+    address: "789 Pine St, Village",
+    rating: 4.5,
   },
+  {
+    id: 4,
+    name: "Merchant D",
+    image: "/merchant_d.jpg", // Replace with actual image path
+    address: "101 Elm St, Hamlet",
+    rating: 3.9,
+  },
+  {
+    id: 5,
+    name: "Merchant E",
+    image: "/merchant_e.jpg", // Replace with actual image path
+    address: "202 Maple St, Borough",
+    rating: 4.1,
+  },
+  {
+    id: 6,
+    name: "Merchant F",
+    image: "/merchant_f.jpg", // Replace with actual image path
+    address: "303 Birch St, District",
+    rating: 4.6,
+  },
+  {
+    id: 7,
+    name: "Merchant G",
+    image: "/merchant_g.jpg", // Replace with actual image path
+    address: "404 Cedar St, Township",
+    rating: 4.3,
+  },
+  {
+    id: 8,
+    name: "Merchant H",
+    image: "/merchant_h.jpg", // Replace with actual image path
+    address: "505 Walnut St, County",
+    rating: 4.7,
+  },
+];
+
+
+const total = ref(3);
+
+const state = reactive({
+  searchKeyword,
+  page_size,
+  current_page,
+  dataList,
+  total,
+  filterMerchants: dataList,
+});
+
+onMounted(() => {
+  console.log("Data list on mounted:", dataList);
+  state.filterMerchants = dataList;
+  search();
+})
+
+const search = () => {
+  // Handle search logic, e.g., navigate to search results page
+  const keyword = searchKeyword.value.toLowerCase();
+  state.filterMerchants = state.dataList.filter(
+      (merchant) => merchant.name.toLowerCase().includes(keyword)
+  );
+  console.log("Search Keyword:", searchKeyword.value);
+  console.log("filterMerchant:", state.filterMerchants);
+  console.log("dataList:", state.dataList);
+  console.log("paginatedMerchants", paginatedMerchants());
+  console.log("Filter Merchants on Search:", state.filterMerchants);
 };
+
+const changePage = (newPage) => {
+  current_page.value = newPage;
+};
+
+const paginatedMerchants = () => {
+  const startIndex = (current_page.value - 1) * page_size;
+  const endIndex = startIndex + page_size;
+  return state.filterMerchants.slice(startIndex, endIndex);
+};
+
 </script>
 
 <style scoped>
@@ -195,7 +162,7 @@ export default {
   justify-content: space-around;
 }
 
-.merchant-item {
+.merchant-merchant {
   margin: 10px;
   cursor: pointer;
   width: 100%; /* Adjust the width as needed */
@@ -203,9 +170,8 @@ export default {
 
 .merchant-image {
   width: 100%; /* Make the image fill the container */
-  height: 150px; /* Adjust as needed */
-  border-radius: 8px;
-  object-fit: cover;
+  display: block;
+
 }
 
 .merchant-info {
@@ -219,11 +185,9 @@ export default {
 
 .pageDown {
   float: left;
-  width: 100%;
-  height: 440px;
+  width: 60%;
+  height: 60%;
 
-  margin-right: 5px;
-  margin-left: -15px;
 }
 
 .pageDown ul {
@@ -248,19 +212,33 @@ export default {
   height: 150px;
 }
 
-.txt1{
+.block {
+  align-content: center;
+  margin-left: 35%;
+}
+
+.txt1 {
   font-weight: 600;
   font-size: 17px;
 }
-.txt2{
+
+.txt2 {
   color: darkgrey;
   font-size: 10px;
 }
-.txt3{
+
+.txt3 {
   color: orangered;
 }
+
 .main {
   border-radius: 8px;
-  margin: 20px 0;
+  margin: auto;
+  height: 120%;
+}
+
+.merchant-item {
+  height: 80px;
+  width: 80px;
 }
 </style>

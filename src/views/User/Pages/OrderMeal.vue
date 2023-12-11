@@ -80,6 +80,7 @@
             <el-icon class="cart-icon">
               <ShoppingCart/>
             </el-icon>
+            <div v-if="cartTotalQuantity > 0" class="cart-badge">{{ cartTotalQuantity }}</div>
           </div>
 
           <!-- Modal/Dialog for shopping cart items -->
@@ -127,10 +128,19 @@ export default {
       filteredMenu: [],
     };
   },
+  created() {
+    this.changeCategory("all");
+  },
+  computed: {
+    cartTotalQuantity(){
+      return this.cart.reduce((total,item) => total + item.quantity,0);
+    },
+  },
   methods: {
     confirmOrder() {
       this.orderConfirmed = true;
       this.showCart = !this.showCart;
+      this.cart = [];
       ElMessage({type: 'success',message: '订单已发送<br><br>五秒后自动返回首页', dangerouslyUseHTMLString: true })
       setTimeout(() => {
         this.$router.push('/user/main');
@@ -273,6 +283,17 @@ export default {
 
 .cart-item {
   margin-bottom: 10px;
+}
+
+.cart-badge {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background-color: red;
+  color: white;
+  border-radius: 50%;
+  padding: 3px 8px;
+  font-size: 12px;
 }
 
 button {

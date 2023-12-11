@@ -12,47 +12,54 @@
         <img :src="userProfile.image"  class="avatar-image" alt="">
         <div class="profile-item">
           <div class="label">姓名:</div>
-          <div class="value">{{ userProfile.name }}</div>
+          <div class="value" @click="startEditing('name')" :contenteditable="editingField === 'name'">{{ userProfile.name }}</div>
         </div>
 
         <div class="profile-item">
           <div class="label">学号:</div>
-          <div class="value">{{ userProfile.studentId }}</div>
+          <div class="value" @click="startEditing('studentId')" :contenteditable="editingField === 'studentId'">{{ userProfile.studentId }}</div>
         </div>
 
         <div class="profile-item">
           <div class="label">居住地址:</div>
-          <div class="value">{{ userProfile.address }}</div>
+          <div class="value" @click="startEditing('address')" :contenteditable="editingField === 'address'">{{ userProfile.address }}</div>
         </div>
 
         <div class="profile-item">
           <div class="label">电话号:</div>
-          <div class="value">{{ userProfile.phoneNumber }}</div>
+          <div class="value" @click="startEditing('phoneNumber')" :contenteditable="editingField === 'phoneNumber'">{{ userProfile.phoneNumber }}</div>
         </div>
       </div>
     </div>
   </div>
 </template>
 
-<script>
+<script setup>
+import {useUserStore} from "@/stores/userStore";
+const userStore = useUserStore()
 import Avatar from '../../../assets/images/user_avatar.jpg'
-export default {
-  data() {
-    return {
-      userProfile: {
-        img: Avatar,
-        name: "Psfott",
-        studentId: "21371158",
-        address: "大运村5号楼, 0410C",
-        phoneNumber: "15526664444",
-        // Add more user details as needed
-      },
-    };
-  },
+
+const userProfile= {
+      img: Avatar,
+      name: userStore.userInfo.user_name,
+      studentId: userStore.userInfo.student_id,
+      address: '',
+      phoneNumber: userStore.userInfo.telephone
+}
+let editingField = null;
+
+const startEditing = (field) => {
+  editingField = field;
 };
+
 </script>
 
 <style scoped>
+
+.value[contenteditable="true"] {
+  border: 1px solid #3498db; /* 添加边框样式以表示可编辑状态 */
+  padding: 8px;
+}
 .page-title {
   text-align: left;
   margin-top: 10px; /* Adjust the margin as needed */

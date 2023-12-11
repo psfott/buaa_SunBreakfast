@@ -12,13 +12,18 @@
         style="width: 100%"
     >
       <el-table-column
-          prop="goodsId"
+          prop="id"
           label="菜品编号"
       >
       </el-table-column>
       <el-table-column
-          prop="goodsName"
+          prop="name"
           label="菜品名"
+      >
+      </el-table-column>
+      <el-table-column
+          prop="type_id"
+          label="菜品种类"
       >
       </el-table-column>
       <el-table-column
@@ -31,16 +36,16 @@
           width="150px"
       >
         <template #default="scope">
-          <img style="width: 100px; height: 100px;" :key="scope.row.goodsId" :src="$filters.prefix(scope.row.goodsCoverImg)" alt="菜品主图">
+<!--          <img style="width: 100px; height: 100px;" :key="scope.row.goodsId" :src="$filters.prefix(scope.row.goodsCoverImg)" alt="菜品主图">-->
         </template>
       </el-table-column>
-<!--      <el-table-column-->
-<!--          prop="stockNum"-->
-<!--          label="商品库存"-->
-<!--      >-->
-<!--      </el-table-column>-->
       <el-table-column
-          prop="sellingPrice"
+          prop="score"
+          label="菜品评分"
+      >
+      </el-table-column>
+      <el-table-column
+          prop="price"
           label="菜品售价"
       >
       </el-table-column>
@@ -82,6 +87,8 @@ import httpInstance from '@/utils/axios'
 import { ElMessage } from 'element-plus'
 import { Plus, Delete } from '@element-plus/icons-vue'
 import { useRouter } from 'vue-router'
+import { useMerchantStore } from '@/stores/merchantStore'
+const merchantStore = useMerchantStore()
 
 const app = getCurrentInstance()
 const { goTop } = app.appContext.config.globalProperties
@@ -99,15 +106,14 @@ onMounted(() => {
 // 获取轮播图列表
 const getGoodList = () => {
   state.loading = true
-  httpInstance.post('/merchant/get', {
-    params: {
-      pageNumber: state.currentPage,
-      pageSize: state.pageSize
-    }
+  httpInstance.post('/Merchant/get_foods', {
+      merchant_id: merchantStore.merchantInfo.userid,
+      page_num: state.currentPage,
+      page_size: state.pageSize
   }).then(res => {
-    state.tableData = res.list
-    state.total = res.totalCount
-    state.currentPage = res.currPage
+    state.tableData = res.data.current_page.map(item => item.fields)
+    console.log(state.tableData)
+    state.total = res.data.totalPage
     state.loading = false
     goTop && goTop()
   })
