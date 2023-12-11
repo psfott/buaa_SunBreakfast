@@ -823,6 +823,18 @@ def delete_type(request):
         return JsonResponse({"error": 2001, "msg": "请求方式错误"})
 
 
+@csrf_exempt
+def delete_types(request):
+    if request.method == "POST":
+        type_ids = request.POST.getlist("type_ids")
+        for type_id in type_ids:
+            type_ = Type.objects.filter(type_id=type_id)
+            type_.delete()
+        return JsonResponse({'error': 0, 'msg': '删除标签成功!'})
+    else:
+        return JsonResponse({"error": 2001, "msg": "请求方式错误"})
+
+
 # 商家修改菜品信息
 @csrf_exempt
 def change_food(request):
