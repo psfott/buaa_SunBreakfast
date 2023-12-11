@@ -1,5 +1,4 @@
 <template>
-  <div class="ongoing-orders">
     <el-card class="order-card" shadow="hover">
       <h1 class="page-title">进行中订单</h1>
 
@@ -10,9 +9,7 @@
         <el-table-column label="送达位置" prop="deliveryLocation"></el-table-column>
         <el-table-column label="订单状态" prop="status"></el-table-column>
         <el-table-column label="操作">
-          <template slot-scope="scope">
-            <el-button type="success" @click="completeOrder(scope.row.id)">完成订单</el-button>
-          </template>
+            <el-button type="success" @click="completeOrder()">完成订单</el-button>
         </el-table-column>
       </el-table>
 
@@ -25,7 +22,6 @@
           @current-change="handlePageChange"
       />
     </el-card>
-  </div>
 </template>
 
 <script>
@@ -77,8 +73,14 @@ export default {
   },
   methods: {
     completeOrder(orderId) {
-      // Logic to handle completing an ongoing order
-      console.log(`Order ${orderId} completed`);
+      // Find the order with matching ID and update its status
+      const order = this.onGoingOrders.find(order => order.id === orderId);
+      if (order) {
+        order.status = "已完成";
+        console.log(`Order ${orderId} completed`);
+      } else {
+        console.error(`Order with ID ${orderId} not found`);
+      }
     },
     handlePageChange(newPage) {
       this.currentPage = newPage;

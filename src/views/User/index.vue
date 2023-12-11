@@ -38,7 +38,7 @@
               <span>首页</span>
             </template>
             <el-menu-item-group>
-              <el-menu-item index="/user/main"><el-icon><House /></el-icon>外卖</el-menu-item>
+              <el-menu-item index="/user/main"><el-icon><House /></el-icon>点外卖</el-menu-item>
             </el-menu-item-group>
           </el-sub-menu>
 

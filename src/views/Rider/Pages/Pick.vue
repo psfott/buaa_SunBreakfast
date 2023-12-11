@@ -1,19 +1,19 @@
 <template>
-  <div class="order-list">
+  <el-card class="order-card" shadow="hover">
     <h1 class="page-title">可接订单</h1>
 
-    <!-- Order List -->
-    <ul>
-      <li v-for="order in displayedOrders" :key="order.id" class="order-item">
-        <div class="order-info">
-          <div><strong>订单ID:</strong> {{ order.id }}</div>
-          <div><strong>商家位置:</strong> {{ order.merchantLocation }}</div>
-          <div><strong>送达位置:</strong> {{ order.deliveryLocation }}</div>
-          <div><strong>订单状态:</strong> {{ order.status }}</div>
-        </div>
-        <button @click="acceptOrder(order.id)">接单</button>
-      </li>
-    </ul>
+    <!-- Order List using el-table -->
+    <el-table :data="availableOrders" style="width: 100%" stripe>
+      <el-table-column label="订单ID" prop="id"></el-table-column>
+      <el-table-column label="商家位置" prop="merchantLocation"></el-table-column>
+      <el-table-column label="送达位置" prop="deliveryLocation"></el-table-column>
+      <el-table-column label="订单状态" prop="status"></el-table-column>
+      <el-table-column label="操作">
+        <template slot-scope="scope">
+          <el-button type="primary" @click="acceptOrder(scope.row.id)">接单</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
 
     <!-- Pagination -->
     <el-pagination
@@ -22,7 +22,7 @@
         :total="availableOrders.length"
         @current-change="handlePageChange"
     />
-  </div>
+  </el-card>
 </template>
 
 <script>
@@ -56,40 +56,12 @@ export default {
 </script>
 
 <style scoped>
-.order-list {
-  max-width: 800px;
-  margin: 20px auto;
-  padding: 20px;
-  border: 1px solid #ccc;
+.order-card {
   border-radius: 8px;
-  background-color: #f8f8f8;
+  margin: 20px 0;
 }
 
 .page-title {
   text-align: center;
-}
-
-.order-item {
-  list-style: none;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  margin: 10px 0;
-  padding: 10px;
-  display: flex;
-  justify-content: space-between;
-}
-
-.order-info {
-  flex: 3;
-}
-
-button {
-  flex: 1;
-  background-color: #4caf50;
-  color: #fff;
-  border: none;
-  padding: 10px;
-  border-radius: 4px;
-  cursor: pointer;
 }
 </style>

@@ -1,34 +1,46 @@
 <template>
-  <div class="rider-profile">
-    <!-- Rider Avatar -->
-    <div class="avatar-container">
-      <img :src="riderProfile.avatar" alt="Rider Avatar" class="avatar-image">
-    </div>
+  <div>
+    <!-- Move the title to the left top corner -->
+    <h1 class="page-title">个人中心</h1>
 
-    <!-- Rider Information -->
-    <div class="info-container">
-      <div class="info-item">
-        <div class="label">骑手ID:</div>
-        <div class="value">{{ riderProfile.id }}</div>
-      </div>
+    <!-- Create a container for user profile with an avatar -->
+    <div class="profile-container">
 
-      <div class="info-item">
-        <div class="label">电话号码:</div>
-        <div class="value">{{ riderProfile.phoneNumber }}</div>
+      <!-- User Details -->
+      <div class="profile-details">
+        <!-- Add your user avatar image source -->
+        <img :src="riderProfile.image"  class="avatar-image" alt="">
+        <div class="profile-item">
+          <div class="label">姓名:</div>
+          <div class="value">{{ riderProfile.name }}</div>
+        </div>
+
+        <div class="profile-item">
+          <div class="label">骑手ID:</div>
+          <div class="value">{{ riderProfile.studentId }}</div>
+        </div>
+
+
+        <div class="profile-item">
+          <div class="label">电话号:</div>
+          <div class="value">{{ riderProfile.phoneNumber }}</div>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import Avatar from '../../../assets/images/user_avatar.jpg'
 export default {
   data() {
     return {
       riderProfile: {
-        id: "123456", // Replace with actual rider ID
-        phoneNumber: "15526664444", // Replace with actual phone number
-        avatar: "rider_avatar.jpg", // Replace with actual image path
-        // Add more rider details as needed
+        img: Avatar,
+        name: "Psfott",
+        studentId: "001",
+        phoneNumber: "15526664444",
+        // Add more user details as needed
       },
     };
   },
@@ -36,33 +48,41 @@ export default {
 </script>
 
 <style scoped>
-.rider-profile {
-  max-width: 600px;
+.page-title {
+  text-align: left;
+  margin-top: 10px; /* Adjust the margin as needed */
+  margin-left: 10px; /* Adjust the margin as needed */
+}
+
+.profile-container {
+  display: flex;
+  max-width: 800px;
   margin: 20px auto;
   padding: 20px;
   border: 1px solid #ccc;
   border-radius: 8px;
   background-color: #f8f8f8;
-  display: flex;
 }
 
-.avatar-container {
-  flex: 1;
-}
 
 .avatar-image {
-  width: 100%; /* Make the image fill the container */
+  width: 100px; /* Adjust the width as needed */
+  height: 100px; /* Adjust the height as needed */
+  margin-bottom: 25px;
   border-radius: 50%;
 }
 
-.info-container {
-  flex: 2;
-  padding-left: 20px;
+.profile-details {
+  flex: 1;
 }
 
-.info-item {
+.profile-item {
   display: flex;
   margin-bottom: 10px;
+}
+
+.profile-item .value {
+  width: 100px;
 }
 
 .label {

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <el-card class="order-card" shadow="hover">
     <h1 class="page-title">已完成的订单</h1>
 
     <table class="order-table">
@@ -45,7 +45,7 @@
       </tr>
       </tbody>
     </table>
-  </div>
+  </el-card>
 </template>
 
 <script>
@@ -132,5 +132,9 @@ th {
   width: 100%;
   height: 100px;
   margin-bottom: 10px;
+}
+.order-card {
+  border-radius: 8px;
+  margin: 20px 0;
 }
 </style>

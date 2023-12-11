@@ -1,18 +1,14 @@
 <template>
-  <div class="completed-orders">
+  <el-card class="completed-orders" shadow="hover">
     <h1 class="page-title">已完成订单</h1>
 
-    <!-- Order List -->
-    <ul>
-      <li v-for="order in displayedOrders" :key="order.id" class="order-item">
-        <div class="order-info">
-          <div><strong>订单ID:</strong> {{ order.id }}</div>
-          <div><strong>商家位置:</strong> {{ order.merchantLocation }}</div>
-          <div><strong>送达位置:</strong> {{ order.deliveryLocation }}</div>
-          <div><strong>订单状态:</strong> {{ order.status }}</div>
-        </div>
-      </li>
-    </ul>
+    <!-- Order List using el-table -->
+    <el-table :data="completedOrders" style="width: 100%" stripe>
+      <el-table-column label="订单ID" prop="id"></el-table-column>
+      <el-table-column label="商家位置" prop="merchantLocation"></el-table-column>
+      <el-table-column label="送达位置" prop="deliveryLocation"></el-table-column>
+      <el-table-column label="订单状态" prop="status"></el-table-column>
+    </el-table>
 
     <!-- Pagination -->
     <el-pagination
@@ -21,7 +17,7 @@
         :total="completedOrders.length"
         @current-change="handlePageChange"
     />
-  </div>
+  </el-card>
 </template>
 
 <script>
@@ -52,29 +48,12 @@ export default {
 
 <style scoped>
 .completed-orders {
-  max-width: 800px;
-  margin: 20px auto;
-  padding: 20px;
-  border: 1px solid #ccc;
   border-radius: 8px;
-  background-color: #f8f8f8;
+  margin: 20px 0;
 }
+
 
 .page-title {
   text-align: center;
-}
-
-.order-item {
-  list-style: none;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  margin: 10px 0;
-  padding: 10px;
-  display: flex;
-  justify-content: space-between;
-}
-
-.order-info {
-  flex: 3;
 }
 </style>
