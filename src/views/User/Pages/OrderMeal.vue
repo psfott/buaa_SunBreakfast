@@ -23,10 +23,10 @@
               active-text-color="#67c23a"
           >
             <el-menu-item
-                index="recommend"
-                @click="changeCategory('recommend')"
+                index="all"
+                @click="changeCategory('all')"
             >
-              菜品推荐
+              全部菜品
             </el-menu-item>
             <el-menu-item
                 index="mainDish"
@@ -158,9 +158,15 @@ export default {
       this.showCart = !this.showCart;
     },
     changeCategory(category) {
-      this.activeMenu = category;
-      this.filterMenu(category);
+      if (category.toLowerCase() === 'all') {
+        // If the category is "all," show all items without filtering
+        this.filteredMenu = this.menu;
+      } else {
+        // Otherwise, filter the menu based on the selected category
+        this.filterMenu(category);
+      }
     },
+
     filterMenu(category) {
       // Assuming you have a 'category' property in each dish object
       this.filteredMenu = this.menu.filter((dish) => dish.category === category);
@@ -204,6 +210,7 @@ export default {
 
 .dish-item {
   margin-bottom: 20px;
+  list-style-type: none;
 }
 
 .dish-image {
