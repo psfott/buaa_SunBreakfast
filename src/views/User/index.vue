@@ -14,7 +14,7 @@
           <span class="user-id">欢迎，psfott</span>
         </div>
         <router-link to="/" class="logout-link">
-          <el-button type="text" @click="logout">退出登录</el-button>
+          <el-button type="text" >退出登录</el-button>
         </router-link>
       </div>
     </el-header>

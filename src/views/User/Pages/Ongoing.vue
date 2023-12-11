@@ -12,7 +12,7 @@
       </tr>
       </thead>
       <tbody>
-      <tr v-for="(order, index) in ongoingOrders" :key="index">
+      <tr v-for="(order, index) in displayedOrders" :key="index">
         <td>{{ order.merchantName }}</td>
         <td>{{ order.orderTime }}</td>
         <td>{{ order.acceptTime }}</td>
@@ -20,6 +20,13 @@
       </tr>
       </tbody>
     </table>
+
+    <el-pagination
+        @current-change="handleCurrentChange"
+        :current-page="currentPage"
+        :page-size="pageSize"
+        :total="ongoingOrders.length"
+    />
   </el-card>
 </template>
 
@@ -36,7 +43,21 @@ export default {
         },
         // Add more ongoing orders as needed
       ],
+      currentPage: 1,
+      pageSize: 10,
     };
+  },
+  computed: {
+    displayedOrders() {
+      const startIndex = (this.currentPage - 1) * this.pageSize;
+      const endIndex = startIndex + this.pageSize;
+      return this.ongoingOrders.slice(startIndex, endIndex);
+    },
+  },
+  methods: {
+    handleCurrentChange(newPage) {
+      this.currentPage = newPage;
+    },
   },
 };
 </script>

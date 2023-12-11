@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <el-card class="main">
     <!-- Centered and Styled Search Bar -->
     <div class="search-bar">
       <el-input
@@ -23,11 +23,17 @@
           </li>
         </ul>
       </div>
-
-
     </div>
 
-  </div>
+    <el-pagination
+        :current-page="currentPage"
+        :page-size="pageSize"
+        :total="paginatedMerchants.length"
+        @current-change="handlePageChange"
+        style="margin-top: 20px"
+    />
+
+  </el-card>
 
 </template>
 
@@ -36,6 +42,8 @@ export default {
   data() {
     return {
       searchKeyword: "", // Search keyword
+      pageSize: 10, // Number of merchants per page
+      currentPage: 1, // Current page number
       recommendedMerchants_top: [
         {
           id: 1,
@@ -160,6 +168,12 @@ export default {
         ...this.recommendedMerchants_down,
       ].filter(merchant => merchant.name.toLowerCase().includes(keyword));
       console.log("Search Keyword:", this.searchKeyword);
+    },handlePageChange(newPage) {
+      this.currentPage = newPage;
+    },paginatedMerchants() {
+      const startIndex = (this.currentPage - 1) * this.pageSize;
+      const endIndex = startIndex + this.pageSize;
+      return this.filteredMerchants.slice(startIndex, endIndex);
     },
   },
 };
@@ -244,5 +258,9 @@ export default {
 }
 .txt3{
   color: orangered;
+}
+.main {
+  border-radius: 8px;
+  margin: 20px 0;
 }
 </style>
