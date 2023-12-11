@@ -41,6 +41,7 @@ class Rider(models.Model):
 class Food(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=128, unique=True)
+    merchant_id = models.IntegerField(default=0)
     score = models.FloatField(default=0)
     price = models.FloatField(default=0)
     type_id = models.IntegerField(default=0)
