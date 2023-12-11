@@ -38,7 +38,10 @@ export default {
       router.replace('/userLogin')
       this.showMessage()
     },
-
+    loginRider(){
+      router.replace('/riderLogin')
+      this.showMessage()
+    },
     showMessage() {
       ElMessage({type: 'success',message:'欢迎光临'})
     }

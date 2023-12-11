@@ -6,6 +6,8 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from order.models import *
 from django.core.serializers import serialize
+from django.core.files.storage import default_storage
+from django.core.files.base import ContentFile
 
 import re
 import datetime
@@ -615,6 +617,12 @@ def add_food(request):
         name = request.POST.get("name")
         price = request.POST.get("price")
         type_id = request.POST.get("type_id")
+
+        if 'image' in request.FILES:
+            image = request.FILES['image']
+        else:
+            image = None
+
         repeated_name = Food.objects.filter(name=name, merchant_id=merchant_id)
         if repeated_name.exists():
             return JsonResponse({"error": 4001, "msg": "菜品名已存在"})
@@ -625,6 +633,12 @@ def add_food(request):
             new_food.price = price
             new_food.type_id = type_id
             new_food.status = True
+
+            if image:
+                # Save the file to the media root
+                file_name = default_storage.save('food_images/' + image.name, ContentFile(image.read()))
+                new_food.image = 'food_images/' + file_name
+
             new_food.save()
             return JsonResponse({"error": 0, "msg": "商家添加菜品成功"})
     else:
@@ -657,7 +671,6 @@ def get_type(request):
             # 假设 Type 对象的主键是 'pk'
             food_count = Food.objects.filter(type_id=type_id).count()
             item['fields']['food_count'] = food_count
-            item['fields']['type_id'] = type_id
         return JsonResponse({"error": 0,
                              "data": {
                                  "current_page": current_types,
@@ -703,8 +716,8 @@ def change_type_name(request):
 @csrf_exempt
 def delete_type(request):
     if request.method == "POST":
-        type_id = request.POST.get("id")
-        type_ = Type.objects.filter(id=type_id)
+        type_id = request.POST.get("type_id")
+        type_ = Type.objects.filter(type_id=type_id)
         type_.delete()
         return JsonResponse({'error': 0, 'msg': '删除标签成功!'})
     else:

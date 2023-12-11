@@ -27,7 +27,8 @@ import Over from "@/views/Rider/Pages/Over.vue"
 import RiderOngoing from "@/views/Rider/Pages/Ongoing.vue"
 import UserLogin from "@/views/User/UserLogin.vue";
 import UserRegister from "@/views/User/UserRegister.vue";
-
+import RiderLogin from "@/views/Rider/RiderLogin.vue";
+import RiderRegister from "@/views/Rider/RiderRegister.vue";
 
 const routes = [
     {
@@ -56,6 +57,16 @@ const routes = [
         component: UserRegister
     },
     {
+        path: '/riderLogin',
+        name: 'RiderLogin',
+        component: RiderLogin
+    },
+    {
+        path: '/riderRegister',
+        name: 'RiderRegister',
+        component: RiderRegister
+    },
+    {
         path: '/forgot-password',
         name: 'ForgotPassword',
         component: ForgotPassword
@@ -80,7 +91,6 @@ const routes = [
         ]
     },
     {
-
         path: '/merchant',
         name: 'merchant',
         component: Merchant,

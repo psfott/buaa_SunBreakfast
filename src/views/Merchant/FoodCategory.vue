@@ -167,7 +167,7 @@ const handleDelete = () => {
 const handleDeleteOne = (id) => {
   // console.log(id)
   httpInstance.post('/Merchant/delete_type', {
-      id: id
+      type_id: id
   }
     ).then(() => {
     ElMessage.success('删除成功')
