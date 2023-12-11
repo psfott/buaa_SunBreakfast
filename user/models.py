@@ -41,10 +41,10 @@ class Rider(models.Model):
 class Food(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=128, unique=True)
-    score = models.FloatField(default="0")
-    price = models.FloatField(default="0")
+    score = models.FloatField(default=0)
+    price = models.FloatField(default=0)
     type_id = models.IntegerField(default=0)
-    image = models.ImageField(upload_to='merchant_images/', null=True, blank=True)
+    image = models.ImageField(upload_to='food_images/', null=True, blank=True)
     status = models.BooleanField(default=True)
 
     class Meta:

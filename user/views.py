@@ -6,6 +6,8 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from order.models import *
 from django.core.serializers import serialize
+from django.core.files.storage import default_storage
+from django.core.files.base import ContentFile
 
 import re
 import datetime
@@ -615,14 +617,30 @@ def add_food(request):
         name = request.POST.get("name")
         price = request.POST.get("price")
         type_id = request.POST.get("type_id")
-        new_food = Food()
-        new_food.merchant_id = merchant_id
-        new_food.name = name
-        new_food.price = price
-        new_food.type_id = type_id
-        new_food.status = True
-        new_food.save()
-        return JsonResponse({"error": 0, "msg": "商家添加菜品成功"})
+
+        if 'image' in request.FILES:
+            image = request.FILES['image']
+        else:
+            image = None
+
+        repeated_name = Food.objects.filter(name=name, merchant_id=merchant_id)
+        if repeated_name.exists():
+            return JsonResponse({"error": 4001, "msg": "菜品名已存在"})
+        else:
+            new_food = Food()
+            new_food.merchant_id = merchant_id
+            new_food.name = name
+            new_food.price = price
+            new_food.type_id = type_id
+            new_food.status = True
+
+            if image:
+                # Save the file to the media root
+                file_name = default_storage.save('food_images/' + image.name, ContentFile(image.read()))
+                new_food.image = 'food_images/' + file_name
+
+            new_food.save()
+            return JsonResponse({"error": 0, "msg": "商家添加菜品成功"})
     else:
         return JsonResponse({"error": 2001, "msg": "请求方式错误"})
 
