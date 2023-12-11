@@ -1,34 +1,34 @@
 <template>
-  <div class="register">
-    <div class="register-container">
+  <div class="login-body">
+    <div class="login-container">
       <div class="head">
         <img class="logo" src="/logo.png" alt=""/>
         <div class="name">
-          <div class="title">用户注册</div>
+          <div class="title">北航阳光早餐系统</div>
         </div>
       </div>
-      <el-form label-position="top" :ref="registerForm" :model="registerForm" class="register-form">
-        <el-form-item label="用户名" prop="user_name">
-          <el-input v-model="registerForm.user_name" placeholder="请输入用户名"></el-input>
+      <el-form label-position="top" :rules="rules" :model="ruleForm" ref="loginForm" class="login-form">
+        <el-form-item label="账号" prop="user_name">
+          <el-input type="text" v-model.trim="ruleForm.user_name" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="手机号" prop="telephone">
-          <el-input v-model="registerForm.telephone" placeholder="请输入手机号"></el-input>
-        </el-form-item>
-<!--        <el-form-item label="学号" prop="studentId">-->
-<!--          <el-input type="studentId" v-model="registerForm.studentId" placeholder="请输入学号"></el-input>-->
-<!--        </el-form-item>-->
-        <el-form-item label="密码" prop="password1">
-          <el-input type="password1" v-model="registerForm.password1" placeholder="请输入密码"></el-input>
-        </el-form-item>
-        <el-form-item label="确认密码" prop="confirmPassword">
-          <el-input type="password2" v-model="registerForm.password2" placeholder="请确认密码"></el-input>
+        <el-form-item label="密码" prop="password">
+          <el-input type="password" v-model.trim="ruleForm.password" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="submitForm">注册</el-button>
-            <router-link to="/login">
-              <el-button >返回登录</el-button>
-            </router-link>
+          <div style="color: #333">登录表示您已同意<a>《服务条款》</a></div>
+          <el-button style="width: 100%" type="primary" @click="submitForm">立即登录</el-button>
+<!--          <el-checkbox v-model="checked" @change="!checked">下次自动登录</el-checkbox>-->
         </el-form-item>
+        <el-row style="text-align: center;margin-top:-10px">
+          <router-link to="/forgot-password">
+            <el-link type="primary">忘记密码</el-link>
+          </router-link>
+        </el-row>
+        <el-row style="text-align: center;margin-top:10px">
+          <router-link to="/userRegister">
+            <el-link type="primary">用户注册</el-link>
+          </router-link>
+        </el-row>
       </el-form>
     </div>
   </div>
@@ -36,44 +36,42 @@
 
 <script setup>
 import { ref } from 'vue'
-import {useRouter} from "vue-router";
-
-import httpInstance from "@/utils/axios";
+import {useRouter} from "vue-router"
+import httpInstance from '@/utils/axios'
+import { useUserStore } from '@/stores/userStore'
 import {ElMessage} from "element-plus";
-import { useMerchantStore } from '@/stores/merchantStore'
-const merchantStore = useMerchantStore()
 
-const registerForm = ref({
+const userStore = useUserStore()
+const ruleForm = ref({
   user_name: '',
-  password1: '',
-  password2: '',
-  telephone: ''
+  password: ''
 })
+
+const rules = {
+  user_name: [
+    { required: true, message: '用户名不能为空', trigger: 'blur' }
+  ],
+  password: [
+    { required: true, message: '密码不能为空', trigger: 'blur' },
+    { min: 6, max: 14, message: '密码长度为6-14个字符', trigger: 'blur' },
+  ]
+}
+
+const loginForm = ref(null)
 const router = useRouter()
 const submitForm = () => {
-  const { user_name, password1,password2,telephone } = registerForm.value
-  if(user_name == ''){
-    ElMessage({ type: 'warning', message: '用户名不能为空' })
-  }else if(password1 == ''){
-    ElMessage({ type: 'warning', message: '密码不能为空' })
-  }else if(password2 == ''){
-    ElMessage({ type: 'warning', message: '请确认密码' })
-  }else if(telephone == ''){
-    ElMessage({ type: 'warning', message: '请输入手机号' })
-  }else{
-    httpInstance.post('/Merchant/register',registerForm.value).then(res => {
+    httpInstance.post('/student/login',ruleForm.value).then(res => {
       console.log(res.data)
-      merchantStore.merchantInfo = res.data
-      console.log(merchantStore.merchantInfo)
-      ElMessage({ type: 'success', message: '注册成功，已自动登录' })
-      router.replace({ path: '/merchant' })
+      userStore.userInfo = res.data
+      console.log(userStore.userInfo )
+      ElMessage({ type: 'success', message: '登录成功' })
+      router.replace({ path: '/user' })
     })
-  }
-};
+}
 </script>
 
 <style scoped>
-.register {
+.login-body {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -87,7 +85,7 @@ const submitForm = () => {
   background-position: center;
   background-size: 100%;
 }
-.register-container {
+.login-container {
   width: 420px;
   height: 500px;
   background-color: #fff;
@@ -110,7 +108,11 @@ const submitForm = () => {
   color: #1BAEAE;
   font-weight: bold;
 }
-.register-form {
+.head .tips {
+  font-size: 12px;
+  color: #999;
+}
+.login-form {
   width: 70%;
   margin: 0 auto;
 }

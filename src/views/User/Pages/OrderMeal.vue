@@ -51,24 +51,28 @@
 
         <el-container class="content">
           <el-main class="main-content">
-            <div v-for="(dish, index) in filteredMenu" :key="index" class="dish-item">
-              <!-- Dish Image -->
-              <img :src="dish.image" alt="Dish Image" class="dish-image">
+            <ul class="dish-list">
+              <li v-for="(dish, index) in filteredMenu" :key="index" class="dish-item">
+                <!-- Dish Image -->
+                <img :src="dish.image" alt="Dish Image" class="dish-image">
 
-              <!-- Dish Details -->
-              <div class="dish-details">
-                <h3>{{ dish.name }}</h3>
-                <p>价格: {{ dish.price }}</p>
-                <p>类别: {{ dish.category }}</p>
+                <!-- Dish Details -->
+                <div class="dish-details">
+                  <h3>{{ dish.name }}</h3>
+                  <ul>
+                    <li>价格: {{ dish.price }}</li>
+                    <li>类别: {{ dish.category }}</li>
+                  </ul>
 
-                <!-- Input for selecting quantity -->
-                <div class="quantity-input">
-                  <input v-model="quantities[index]" type="number" min="0" placeholder="数量">
-                  <!-- "加入购物车" button -->
-                  <button @click="addToCart(index)">加入购物车</button>
+                  <!-- Input for selecting quantity -->
+                  <div class="quantity-input">
+                    <input v-model="quantities[index]" type="number" min="0" placeholder="数量">
+                    <!-- "加入购物车" button -->
+                    <button @click="addToCart(index)">加入购物车</button>
+                  </div>
                 </div>
-              </div>
-            </div>
+              </li>
+            </ul>
           </el-main>
 
           <!-- Circular button for shopping cart -->
@@ -203,9 +207,11 @@ export default {
 }
 
 .dish-image {
-  max-width: 50%; /* 限制图像的最大宽度 */
-  width: 100%;
-  height: auto; /* 保持图像的纵横比 */
+  width: 150px;
+  height: 150px;
+  border-radius: 8px;
+  object-fit: cover;
+  //height: auto; /* 保持图像的纵横比 */
 }
 
 .clear-cart-button {
@@ -271,5 +277,9 @@ button {
 
 .container {
   height: 100vh;
+}
+
+.quantity-input {
+  width: 150px;
 }
 </style>

@@ -34,7 +34,10 @@ export default {
       router.replace('/merchantLogin')
       this.showMessage()
     },
-
+    loginUser(){
+      router.replace('/userLogin')
+      this.showMessage()
+    },
 
     showMessage() {
       ElMessage({type: 'success',message:'欢迎光临'})

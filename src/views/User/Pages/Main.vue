@@ -10,18 +10,33 @@
       <el-button type="primary" @click="search">搜索</el-button>
     </div>
 
-    <!-- Recommended Merchants (Two Columns, Three Rows) -->
-    <div class="merchant-list">
-      <div v-for="merchant in recommendedMerchants" :key="merchant.id" class="merchant-item">
-        <router-link :to="{ name: 'menu', params: { id: merchant.id } }">
-        <img :src="merchant.image" alt="Merchant Image" class="merchant-image">
-        <div class="merchant-info">
-          <h3>{{ merchant.name }}</h3>
-          <p>Address: {{ merchant.address }}</p>
-          <p>Rating: {{ merchant.rating }}/5</p>
-        </div>
-        </router-link>
+    <div class="pageDown">
+      <div class="merchant-list-top">
+        <ul>
+          <li v-for="merchant in recommendedMerchants_top" :key="merchant.id" class="merchant-item">
+            <router-link :to="{ name: 'menu', params: { id: merchant.id } }">
+              <img :src="merchant.image"/>
+              <div class="txt1"> {{ merchant.name }}</div>
+              <div class="txt2"> {{ merchant.address }}</div>
+              <div class="txt3">{{ merchant.rating }}</div>
+            </router-link>
+          </li>
+        </ul>
       </div>
+
+      <div class="merchant-list-down">
+        <ul>
+          <li v-for="merchant in recommendedMerchants_down" :key="merchant.id" class="merchant-item">
+            <router-link :to="{ name: 'menu', params: { id: merchant.id } }">
+              <img :src="merchant.image"/>
+              <div class="txt1"> {{ merchant.name }}</div>
+              <div class="txt2"> {{ merchant.address }}</div>
+              <div class="txt3">{{ merchant.rating }}</div>
+            </router-link>
+          </li>
+        </ul>
+      </div>
+
     </div>
 
   </div>
@@ -33,7 +48,7 @@ export default {
   data() {
     return {
       searchKeyword: "", // Search keyword
-      recommendedMerchants: [
+      recommendedMerchants_top: [
         {
           id: 1,
           name: "Merchant A",
@@ -105,6 +120,43 @@ export default {
           rating: 5.0,
         }
       ],
+      recommendedMerchants_down:[
+        {
+          id: 6,
+          name: "Merchant F",
+          image: "/merchant_f.jpg", // Replace with actual image path
+          address: "303 Birch St, District",
+          rating: 4.6,
+        },
+        {
+          id: 7,
+          name: "Merchant G",
+          image: "/merchant_g.jpg", // Replace with actual image path
+          address: "404 Cedar St, Township",
+          rating: 4.3,
+        },
+        {
+          id: 8,
+          name: "Merchant H",
+          image: "/merchant_h.jpg", // Replace with actual image path
+          address: "505 Walnut St, County",
+          rating: 4.7,
+        },
+        {
+          id: 9,
+          name: "Merchant I",
+          image: "/merchant_i.jpg", // Replace with actual image path
+          address: "606 Fir St, Municipality",
+          rating: 4.4,
+        },
+        {
+          id: 10,
+          name: "Merchant J",
+          image: "/merchant_j.jpg",
+          address: "503 Ps St, NewYork",
+          rating: 5.0,
+        }
+      ]
 
     };
   },
@@ -136,7 +188,7 @@ export default {
 .merchant-item {
   margin: 10px;
   cursor: pointer;
-  width: 200px; /* Adjust the width as needed */
+  width: 100%; /* Adjust the width as needed */
 }
 
 .merchant-image {
@@ -155,4 +207,46 @@ export default {
   margin-bottom: 5px;
 }
 
+.pageDown {
+  float: left;
+  width: 100%;
+  height: 440px;
+
+  margin-right: 5px;
+  margin-left: -15px;
+}
+
+.pageDown ul {
+  list-style: none;
+  height: 200px;
+  margin-top: 0;
+}
+
+.pageDown ul li {
+  text-align: center;
+  background-color: #ffffff;
+  float: left;
+  margin-left: 10px;
+  width: 200px;
+  font-size: 13px;
+  height: 215px;
+  margin-bottom: 5px;
+}
+
+.pageDown ul li img {
+  width: 90px;
+  height: 150px;
+}
+
+.txt1{
+  font-weight: 600;
+  font-size: 17px;
+}
+.txt2{
+  color: darkgrey;
+  font-size: 10px;
+}
+.txt3{
+  color: orangered;
+}
 </style>

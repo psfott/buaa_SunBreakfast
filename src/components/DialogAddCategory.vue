@@ -77,8 +77,6 @@ const close = () => {
   state.visible = false
 }
 const submitForm = () => {
-  formRef.value.validate((valid) => {
-    if (valid) {
       if (props.type == 'add') {
         // 添加方法
         httpInstance.post('Merchant/add_type', {
@@ -92,12 +90,9 @@ const submitForm = () => {
         })
       } else {
         // 修改方法
-        httpInstance.put('/categories', {
-          categoryId: state.id,
-          categoryLevel: state.categoryLevel,
-          parentId: state.categoryLevel,
-          categoryName: state.ruleForm.name,
-          categoryRank: state.ruleForm.rank
+        httpInstance.post('/Merchant/change_type', {
+          name: state.ruleForm.name,
+          type_id: state.item.type_id
         }).then(() => {
           ElMessage.success('修改成功')
           state.visible = false
@@ -105,8 +100,6 @@ const submitForm = () => {
           if (props.reload) props.reload()
         })
       }
-    }
-  })
 }
 defineExpose({ open, close })
 </script>

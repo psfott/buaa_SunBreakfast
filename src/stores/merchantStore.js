@@ -1,8 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import httpInstance from '@/utils/axios'
-// import intro from "intro.js";
-// import "intro.js/minified/introjs.min.css";
 import { inject } from 'vue'
 
 export const useMerchantStore = defineStore('merchant', () => {
@@ -14,13 +12,7 @@ export const useMerchantStore = defineStore('merchant', () => {
       telephone: ''
   })
 
-  const pages = ref({
-    teamId: '',
-    proId:'',
-    memberlist: [],
-    visitMemberUsername: '',
-    isNewUser: []
-  })
+
 
 
 const test = inject('$test')
@@ -59,18 +51,6 @@ const handleStart = () => {
       .start();
   }
 
-  const loadMember = () => {
-    console.log(pages.value.teamId)
-    httpInstance.post("/getGroupInf",{
-        groupId: pages.value.teamId
-    }).then(res => {
-        console.log(res.data)
-        res.data.forEach(element => {
-          pages.value.memberlist.push(element)
-        })
-    })
-  }
-
   // 2. 定义获取接口数据的action函数
   const getUserInfo = async(loginForm) => {
     console.log(loginForm)
@@ -96,8 +76,6 @@ const handleStart = () => {
     merchantInfo,
     getUserInfo,
     clearUserInfo,
-    pages,
-    loadMember,
     handleStart
   }
 }, {

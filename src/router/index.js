@@ -3,11 +3,9 @@ import { createRouter, createWebHistory } from "vue-router";
 
 import Home from '../views/Home.vue'
 import MerchantLogin from '../views/Merchant/MerchantLogin.vue'
-import Register from "../views/Register.vue";
+import MerchantRegister from "../views/Merchant/MerchantRegister.vue";
 import ForgotPassword from "../views/ForgotPassword.vue";
 import Merchant from "@/views/Merchant/index.vue";
-import User from "../views/User/index.vue"
-import Layout from "@/views/User/Pages/Layout.vue";
 import UserProfile from "../views/User/Pages/Profile.vue"
 import Main from "@/views/User/Pages/Main.vue";
 import Ongoing from "@/views/User/Pages/Ongoing.vue";
@@ -20,6 +18,9 @@ import MerchantFoodCategory from "@/views/Merchant/FoodCategory.vue";
 import MerchantAccount from "@/views/Merchant/MerchantAccount.vue";
 import MerchantOrder from "@/views/Merchant/MerchantOrder.vue";
 import MerchantOrderDetail from "@/views/Merchant/MerchantOrderDetail.vue";
+import user from "@/views/User/index.vue";
+import UserLogin  from "@/views/User/UserLogin.vue";
+import UserRegister from "@/views/User/UserRegister.vue";
 
 const routes = [
     {
@@ -33,15 +34,26 @@ const routes = [
         component: MerchantLogin
     },
     {
+        path: '/merchantRegister',
+        name: 'MerchantRegister',
+        component: MerchantRegister
+    },
+    {
+        path: '/userLogin',
+        name: 'UserLogin',
+        component: UserLogin
+    },
+    {
+        path: '/userRegister',
+        name: 'userRegister',
+        component: UserRegister
+    },
+    {
         path: '/forgot-password',
         name: 'ForgotPassword',
         component: ForgotPassword
     },
-    {
-        path: '/register',
-        name: 'Register',
-        component: Register
-    },
+
     {
         path: '/merchant',
         name: 'Merchant',
@@ -49,28 +61,15 @@ const routes = [
     },
     {
         path: '/user',
-        component: Layout, //使用布局组件
+        name: 'user',
+        component: user, //使用布局组件
+        redirect: '/user/main',
+        meta: {requiresAuth: true},
         children: [
-            {
-                path:'',
-                redirect:'/user/main'
-            },
-            {
-                path:'profile',
-                component: UserProfile
-            },
-            {
-                path:'main',
-                component: Main
-            },
-            {
-                path: 'ongoing',
-                component: Ongoing
-            },
-            {
-                path: 'finished',
-                component: Finished
-            }
+            {   path:'/user/profile', component: UserProfile, meta: { requiresAuth: true }  },
+            {   path:'/user/main', component: Main, meta: { requiresAuth: true }    },
+            {   path: '/user/ongoing', component: Ongoing, meta: { requiresAuth: true } },
+            {   path: '/user/finished', component: Finished, meta: { requiresAuth: true } }
         ]
     },
     {
@@ -103,21 +102,4 @@ const router = createRouter({
     routes
 })
 
-// router.beforeEach((to, from, next) => {
-//     if (to.path === '/login') {
-//         // 如果路径是 /login 则正常执行
-//         next()
-//     } else {
-//         // 如果不是 /login，判断是否有 token
-//         if (!localGet('token')) {
-//             // 如果没有，则跳至登录页面
-//             next({ path: '/login' })
-//         } else {
-//             // 否则继续执行
-//             next()
-//         }
-//     }
-//     state.currentPath = to.path
-//     document.title = pathMap[to.name]
-// })
 export default router;
