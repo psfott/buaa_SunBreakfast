@@ -13,7 +13,7 @@
     <div class="pageDown">
       <div class="merchant-list-top">
         <ul>
-          <li v-for="merchant in recommendedMerchants_top" :key="merchant.id" class="merchant-item">
+          <li v-for="merchant in filteredMerchants" :key="merchant.id" class="merchant-item">
             <router-link :to="{ name: 'menu', params: { id: merchant.id } }">
               <img :src="merchant.image"/>
               <div class="txt1"> {{ merchant.name }}</div>
@@ -24,18 +24,6 @@
         </ul>
       </div>
 
-      <div class="merchant-list-down">
-        <ul>
-          <li v-for="merchant in recommendedMerchants_down" :key="merchant.id" class="merchant-item">
-            <router-link :to="{ name: 'menu', params: { id: merchant.id } }">
-              <img :src="merchant.image"/>
-              <div class="txt1"> {{ merchant.name }}</div>
-              <div class="txt2"> {{ merchant.address }}</div>
-              <div class="txt3">{{ merchant.rating }}</div>
-            </router-link>
-          </li>
-        </ul>
-      </div>
 
     </div>
 
@@ -156,13 +144,21 @@ export default {
           address: "503 Ps St, NewYork",
           rating: 5.0,
         }
-      ]
-
+      ],
+      filteredMerchants: [],
     };
+  },
+  created() {
+    this.search();
   },
   methods: {
     search() {
       // Handle search logic, e.g., navigate to search results page
+      const keyword = this.searchKeyword.toLowerCase();
+      this.filteredMerchants = [
+        ...this.recommendedMerchants_top,
+        ...this.recommendedMerchants_down,
+      ].filter(merchant => merchant.name.toLowerCase().includes(keyword));
       console.log("Search Keyword:", this.searchKeyword);
     },
   },

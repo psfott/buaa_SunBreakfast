@@ -9,7 +9,7 @@
       <!-- User Details -->
       <div class="profile-details">
         <!-- Add your user avatar image source -->
-        <img src="userProfile.image"  class="avatar-image"/>
+        <img :src="userProfile.image"  class="avatar-image" alt="">
         <div class="profile-item">
           <div class="label">姓名:</div>
           <div class="value">{{ userProfile.name }}</div>
@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import Avatar from "../../../assets/images/user_avatar.jpg"
+import Avatar from '../../../assets/images/user_avatar.jpg'
 export default {
   data() {
     return {

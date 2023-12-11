@@ -19,8 +19,15 @@ import MerchantAccount from "@/views/Merchant/MerchantAccount.vue";
 import MerchantOrder from "@/views/Merchant/MerchantOrder.vue";
 import MerchantOrderDetail from "@/views/Merchant/MerchantOrderDetail.vue";
 import user from "@/views/User/index.vue";
-import UserLogin  from "@/views/User/UserLogin.vue";
+import Rider from "@/views/Rider/index.vue";
+import RiderProfile from "@/views/Rider/Pages/Profile.vue";
+import RiderIntro from "@/views/Rider/Pages/Introduction.vue";
+import Pick from "@/views/Rider/Pages/Pick.vue";
+import Over from "@/views/Rider/Pages/Over.vue"
+import RiderOngoing from "@/views/Rider/Pages/Ongoing.vue"
+import UserLogin from "@/views/User/UserLogin.vue";
 import UserRegister from "@/views/User/UserRegister.vue";
+
 
 const routes = [
     {
@@ -62,7 +69,7 @@ const routes = [
     {
         path: '/user',
         name: 'user',
-        component: user, //使用布局组件
+        component: user,
         redirect: '/user/main',
         meta: {requiresAuth: true},
         children: [
@@ -87,6 +94,20 @@ const routes = [
             { path: '/merchant/account', component: MerchantAccount, meta: { requiresAuth: true } },
             { path: '/merchant/order', component: MerchantOrder, meta: { requiresAuth: true } },
             { path: '/merchant/order_detail', component: MerchantOrderDetail, meta: { requiresAuth: true } }
+        ]
+    },
+    {
+        path: '/rider',
+        name: 'rider',
+        component: Rider,
+        redirect: 'rider/intro',
+        meta: {requiresAuth: true},
+        children: [
+            {   path:'/rider/profile', component: RiderProfile, meta: { requiresAuth: true }  },
+            {   path:'/rider/intro', component: RiderIntro, meta: { requiresAuth: true }    },
+            {   path: '/rider/ongoing',component: RiderOngoing,meta: {requiresAuth: true} },
+            {   path: '/rider/pick', component: Pick, meta: { requiresAuth: true } },
+            {   path: '/rider/over', component: Over, meta: { requiresAuth: true } }
         ]
     },
     {
