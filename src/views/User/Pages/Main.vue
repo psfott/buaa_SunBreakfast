@@ -15,7 +15,7 @@
         <div style="margin-top:15px">
           <el-card :body-style="{ padding: '0px' }">
             <router-link :to="{ name: 'menu', params: { id: merchant.id } }">
-              <img :src="merchant.image" class="merchant-image"/>
+              <img src="/logo.png" class="merchant-image"/>
               <div class="txt1"> {{ merchant.name }}</div>
               <div class="txt2"> {{ merchant.address }}</div>
               <div class="txt3">{{ merchant.rating }}</div>

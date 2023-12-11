@@ -51,28 +51,34 @@
 
         <el-container class="content">
           <el-main class="main-content">
-            <ul class="dish-list">
-              <li v-for="(dish, index) in filteredMenu" :key="index" class="dish-item">
-                <!-- Dish Image -->
-                <img :src="dish.image" alt="Dish Image" class="dish-image">
+            <el-row class="dish-list">
+              <el-col v-for="(dish, index) in filteredMenu" :key="index" :span="8">
+                <div class="dish-item">
+                  <!-- Dish Image -->
+                  <img src="/logo.png" alt="Dish Image" class="dish-image">
 
-                <!-- Dish Details -->
-                <div class="dish-details">
-                  <h3>{{ dish.name }}</h3>
-                  <ul>
-                    <li>价格: {{ dish.price }}</li>
-                    <li>类别: {{ dish.category }}</li>
-                  </ul>
+                  <!-- Dish Details -->
+                  <el-row class="dish-details">
+                    <el-col :span="24">
+                      <h3>{{ dish.name }}</h3>
+                    </el-col>
+                    <el-col :span="24">
+                      <span>价格: {{ dish.price }}</span><br><br>
+                      <span>类别: {{ dish.category }}</span>
+                    </el-col>
 
-                  <!-- Input for selecting quantity -->
-                  <div class="quantity-input">
-                    <input v-model="quantities[index]" type="number" min="0" placeholder="数量">
-                    <!-- "加入购物车" button -->
-                    <button @click="addToCart(index)">加入购物车</button>
-                  </div>
+                    <!-- Input for selecting quantity -->
+                    <el-col :span="24">
+                      <div class="quantity-input">
+                        <input v-model="quantities[index]" type="number" min="0" placeholder="数量">
+                        <!-- "加入购物车" button -->
+                        <button @click="addToCart(index)">加入购物车</button>
+                      </div>
+                    </el-col>
+                  </el-row>
                 </div>
-              </li>
-            </ul>
+              </el-col>
+            </el-row>
           </el-main>
 
           <!-- Circular button for shopping cart -->
@@ -117,15 +123,55 @@ export default {
       isFullWidth: false,
       restaurantName: 'Merchant A',
       menu: [
-        {name: '菜品1', price: 10, image: baoziImage, category: 'mainDish'},
-        {name: '菜品2', price: 15, image: youtiaoImage, category: 'mainDish'},
+        {
+          name: '菜品1',
+          price: 10,
+          image: baoziImage,
+          category: 'mainDish'
+        },
+        {
+          name: '菜品2',
+          price: 15,
+          image: youtiaoImage,
+          category: 'mainDish'
+        },
+        {
+          name: '菜品3',
+          price: 12,
+          image: '路径/到/你的/图片3.jpg',
+          category: 'sideDish'
+        },
+        {
+          name: '菜品4',
+          price: 8,
+          image: '路径/到/你的/图片4.jpg',
+          category: 'drink'
+        },
+        {
+          name: '菜品5',
+          price: 18,
+          image: '路径/到/你的/图片5.jpg',
+          category: 'mainDish'
+        },
+        {
+          name: '菜品6',
+          price: 14,
+          image: '路径/到/你的/图片6.jpg',
+          category: 'sideDish'
+        },
+        {
+          name: '菜品7',
+          price: 20,
+          image: '路径/到/你的/图片7.jpg',
+          category: 'drink'
+        }
         // Add more dishes as needed
       ],
       quantities: Array.from({length: 10}, () => 0), // Initialize quantities array
       orderConfirmed: false,
       cart: [],
       showCart: false, // Toggle to show/hide cart modal
-      filteredMenu: [],
+      filteredMenu: ref([]),
     };
   },
   created() {
@@ -174,12 +220,12 @@ export default {
       } else {
         // Otherwise, filter the menu based on the selected category
         this.filterMenu(category);
+        this.$forceUpdate();
       }
     },
-
     filterMenu(category) {
       // Assuming you have a 'category' property in each dish object
-      this.filteredMenu = this.menu.filter((dish) => dish.category === category);
+      this.filteredMenu = this.menu.filter((dish) => dish.category === category );
     },
   },
 };
@@ -213,17 +259,26 @@ export default {
 .main-content {
   flex-grow: 1;
   display: flex;
-  align-items: stretch; /* Update this line to stretch */
+  align-items: flex-start; /* Update this line to stretch */
   justify-content: flex-start;
   padding: 20px;
+}
+
+
+.dish-list {
+  display: flex;
+  flex-wrap: wrap; /* Allow items to wrap to the next line */
+  justify-content: space-between;
 }
 
 .dish-item {
   margin-bottom: 20px;
   list-style-type: none;
+  flex: 0 0 calc(25% - 20px); /* Set width for three items in a row (adjust as needed) */
+  box-sizing: border-box; /* Include padding and border in the box sizing */
+  margin-right: 20px;
 }
-
-.dish-image {
+ .dish-image {
   width: 150px;
   height: 150px;
   border-radius: 8px;
@@ -248,8 +303,7 @@ export default {
 .content {
   display: flex;
   flex-direction: column;
-  max-height: 100vh;
-  overflow: hidden;
+  max-height: 100%;
 }
 
 
@@ -310,4 +364,5 @@ button {
 .quantity-input {
   width: 150px;
 }
+
 </style>
