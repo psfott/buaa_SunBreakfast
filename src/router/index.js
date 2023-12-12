@@ -124,7 +124,7 @@ const routes = [
         path: '/menu/:id',
         name: 'menu',
         component: Menu,
-        props: true,
+        //props: true,
     }
 ]
 
